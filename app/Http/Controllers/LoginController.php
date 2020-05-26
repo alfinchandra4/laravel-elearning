@@ -16,11 +16,11 @@ class LoginController extends Controller
         $credential = ['email' => $request->email, 'password' => $request->password];
 
         if (auth()->guard('admin')->attempt($credential)) {
-            return redirect()->intended('/admin/home');
+            return redirect()->intended('/admin');
         } elseif (auth()->guard('student')->attempt($credential)) {
-            return redirect()->intended('/student/home');
+            return redirect()->intended('/student');
         } elseif (auth()->guard('lecturer')->attempt($credential)) {
-            return redirect()->intended('/lecturer/home');
+            return redirect()->intended('/lecturer');
         } else {
             return back()->withError('Invalid credentials!');
         }

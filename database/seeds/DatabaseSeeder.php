@@ -13,5 +13,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         factory(Admin::class)->create();
+        $this->call(Faculty::class);
+        $this->call(Major::class);
     }
 }
