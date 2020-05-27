@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::view('/', 'login');
 Route::post('/login', 'LoginController@login');
 Route::get('/logout', 'LoginController@logout');
@@ -21,7 +22,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin']], function () 
   Route::get('/', 'AdminController@index')->name('admin.index');
   Route::post('/student', 'AdminController@student_store')->name('admin.student.store');
   Route::get('/student/delete/{student_id}', 'AdminController@student_delete')->name('admin.student.delete');
-  Route::get('/student/edit/{student_id}'. 'AdminController@student_edit')->name('admin.student.edit');
+  Route::get('/student/edit/{student_id}' . 'AdminController@student_edit')->name('admin.student.edit');
   Route::post('/student/update', 'AdminController@student_update')->name('admin.student.update');
   Route::get('/faculty/{faculty_id?}', 'AdminController@student_faculty')->name('admin.student.faculty');
 
@@ -32,7 +33,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin']], function () 
   Route::get('/lecturer/edit/{lecturer_id}', 'AdminController@lecturer_edit')->name('admin.lecturer.edit');
   Route::get('/lecturer/delete/{lecturer_id}', 'AdminController@lecturer_delete')->name('admin.lecturer.delete');
   Route::post('/lecturer/update', 'AdminController@lecturer_update')->name('admin.lecturer.update');
-
 });
 
 Route::group(['prefix' => 'student', 'middleware' => ['auth:student']], function () {
@@ -40,7 +40,13 @@ Route::group(['prefix' => 'student', 'middleware' => ['auth:student']], function
 });
 
 Route::group(['prefix' => 'lecturer', 'middleware' => ['auth:lecturer']], function () {
-  Route::view('/home', 'lecturer.index')->name('lecturer.index');
+
+  //  Materi
+  Route::get('/', 'LecturerController@index')->name('lecturer.index');
+  Route::get('/lesson/create', 'LecturerController@lesson_create')->name('lecturer.lesson.create');
+  Route::post('/lesson/store', 'LecturerController@lesson_store')->name('lecturer.lesson.store');
+
+  // 
 });
 
 Route::get('/session', 'ExampleController@session');

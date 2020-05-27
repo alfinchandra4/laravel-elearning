@@ -87,20 +87,22 @@ class AdminController extends Controller
 
     public function lecturer_update(Request $request)
     {
-        $checkLecturerAccount = Lecturer::where('email', $request->email)->first();
-        if ($checkLecturerAccount !== null) {
-            toast('Invalid update, check your input', 'error');
-            return back();
-        } else {
-            $lct = Lecturer::find($request->lecturerid);
-            $lct->name = $request->name;
-            $lct->email = $request->email;
-            if ($request->password !== null) {
-                $lct->password = bcrypt($request->password);
+        $checkLecturerAccount = Lecturer::find($request->lecturerid);
+        if ($checkLecturerAccount->email != $request->email) {
+            $checkEmailIsRegisteredAnotherAccount = Lecturer::where('email',  $request->email)->first();
+            if ($checkEmailIsRegisteredAnotherAccount !== null) {
+                toast('Invalid update, email is exist', 'error');
+                return back();
             }
-            toast('Lecturer update successfully', 'success');
-            $lct->save();
         }
+        $lct = Lecturer::find($request->lecturerid);
+        $lct->name = $request->name;
+        $lct->email = $request->email;
+        if ($request->password !== null) {
+            $lct->password = bcrypt($request->password);
+        }
+        toast('Lecturer update successfully', 'success');
+        $lct->save();
         return back();
     }
 }
