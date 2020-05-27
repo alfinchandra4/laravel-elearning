@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Student;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Lecturer;
+use Route;
 
 
 class AdminController extends Controller
@@ -17,20 +18,11 @@ class AdminController extends Controller
 
     public function student_store(Request $request)
     {
-        $isExist = Student::where('nim', $request->nim)->first();
+        $isExist = Student::where('nim', $request->nim)->orWhere('email', $request->email)->first();
         if ($isExist) {
             toast('Student already registered', 'error');
         } else {
-            Student::create([
-                'nim' => $request->nim,
-                'name' => $request->name,
-                'faculty_id' => $request->faculty_id,
-                'major_id' => $request->major_id,
-                'born' => $request->born,
-                'birth' => $request->birth,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-            ]);
+            Student::create($request->all());
             toast('Student created!', 'success');
         }
         return back();
@@ -53,7 +45,8 @@ class AdminController extends Controller
 
     public function student_update(Request $request)
     {
-        if($request->faculty_id == 0 || $request->major_id == 0) {
+        $checkStudentAccount = Student::where('email', $request->email)->first();
+        if ($request->faculty_id == 0 || $request->major_id == 0 || $checkStudentAccount !== null) {
             toast('Invalid update, check your input', 'error');
             return back();
         }
@@ -64,11 +57,50 @@ class AdminController extends Controller
         $std->born = $request->born;
         $std->birth = $request->birth;
         $std->email = $request->email;
-        if ($request->password != null ) {
+        if ($request->password != null) {
             $std->password = bcrypt($request->password);
         }
         $std->save();
         toast('Student updated successfully', 'success');
+        return back();
+    }
+
+    // Lecturer
+    public function lecturer()
+    {
+        return view('admin.lecturer');
+    }
+
+    public function lecturer_store(Request $request)
+    {
+        Lecturer::create($request->all());
+        toast('Lecturer created!', 'success');
+        return back();
+    }
+
+    public function lecturer_delete($lecturer_id)
+    {
+        Lecturer::find($lecturer_id)->delete();
+        toast('Lecturer deleted!', 'success');
+        return back();
+    }
+
+    public function lecturer_update(Request $request)
+    {
+        $checkLecturerAccount = Lecturer::where('email', $request->email)->first();
+        if ($checkLecturerAccount !== null) {
+            toast('Invalid update, check your input', 'error');
+            return back();
+        } else {
+            $lct = Lecturer::find($request->lecturerid);
+            $lct->name = $request->name;
+            $lct->email = $request->email;
+            if ($request->password !== null) {
+                $lct->password = bcrypt($request->password);
+            }
+            toast('Lecturer update successfully', 'success');
+            $lct->save();
+        }
         return back();
     }
 }

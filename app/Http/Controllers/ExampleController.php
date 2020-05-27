@@ -6,14 +6,17 @@ use Illuminate\Http\Request;
 use Response;
 use App\Major;
 use App\Student;
+use App\Lecturer;
 
 class ExampleController extends Controller
 {
-    public function session() {
+    public function session()
+    {
         dd(session()->all());
     }
 
-    public function test() {
+    public function test()
+    {
         $arrFaculty = [
             ['FEB', 'Ekonomi dan Bisnis'],
             ['FK', 'Kedokteran'],
@@ -26,17 +29,27 @@ class ExampleController extends Controller
         dd($arrFaculty[0][1]);
     }
 
-    public function getmajor($faculty_id) {
+    public function getmajor($faculty_id)
+    {
         $data = Major::where('faculty_id', $faculty_id)->get();
         return Response::json([
             'data' => $data
         ]);
     }
 
-    public function getstudent($studentid) {
+    public function getstudent($studentid)
+    {
         $student = Student::find($studentid);
         return Response::json([
             'student' => $student
+        ]);
+    }
+
+    public function getLecturer($lecturer_id)
+    {
+        $lecturer = Lecturer::find($lecturer_id);
+        return Response::json([
+            'lecturer' => $lecturer
         ]);
     }
 }

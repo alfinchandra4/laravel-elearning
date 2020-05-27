@@ -31,11 +31,11 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarText">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Mahasiswa</a>
+      <li class="nav-item {{ Route::currentRouteName() == 'admin.index' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.index') }}">Mahasiswa</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Dosen</a>
+      <li class="nav-item {{ Route::currentRouteName() == 'admin.lecturer' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.lecturer') }}">Dosen</a>
       </li>
     </ul>
     <span class="navbar-text">

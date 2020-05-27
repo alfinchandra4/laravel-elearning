@@ -12,5 +12,17 @@ class Lecturer extends Authenticatable
 
     protected $table = 'lecturers';
     protected $primaryKey = 'id';
-    protected $guarded = [];
+
+    protected $fillable = [
+        'nidn', 'name', 'email', 'password',
+    ];
+
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
 }

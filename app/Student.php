@@ -14,11 +14,18 @@ class Student extends Authenticatable
     protected $primaryKey = 'id';
     protected $guarded = [];
 
-    public function faculty() {
+    public function faculty()
+    {
         return $this->belongsTo(Faculty::class, 'faculty_id');
     }
 
-    public function major() {
+    public function major()
+    {
         return $this->belongsTo(Major::class, 'major_id');
+    }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
     }
 }

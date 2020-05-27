@@ -173,7 +173,7 @@
               <input type="hidden" name="studentid" id="studentid-edit">
               <div class="form-group">
                 <label for="nim">Nomor Induk Mahasiswa</label>
-                <input type="text" id="edit_nim" name="nim" class="form-control" maxlength="10" required>
+                <input type="text" id="edit_nim" name="nim" class="form-control" maxlength="10" required readonly>
               </div>
               <div class="form-group">
                 <label for="name">Nama</label>
