@@ -17,6 +17,10 @@ class Students extends Migration
             $table->id();
             $table->char('nim')->unique();
             $table->string('name');
+
+            $table->unsignedBigInteger('faculty_id');
+            $table->foreign('faculty_id')->references('id')->on('faculties');
+
             $table->unsignedBigInteger('major_id');
             $table->foreign('major_id')->references('id')->on('majors');
             $table->char('born');

@@ -13,4 +13,12 @@ class Student extends Authenticatable
     protected $table = 'students';
     protected $primaryKey = 'id';
     protected $guarded = [];
+
+    public function faculty() {
+        return $this->belongsTo(Faculty::class, 'faculty_id');
+    }
+
+    public function major() {
+        return $this->belongsTo(Major::class, 'major_id');
+    }
 }
