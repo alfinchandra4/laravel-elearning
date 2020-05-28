@@ -33,7 +33,7 @@ class LoginController extends Controller
         } elseif (auth()->guard('student')->check()) {
             auth()->guard('student')->logout();
         } elseif (auth()->guard('lecturer')->check()) {
-            auth()->guard('lecturer')->logoout();
+            auth()->guard('lecturer')->logout();
         }
 
         return redirect('/');

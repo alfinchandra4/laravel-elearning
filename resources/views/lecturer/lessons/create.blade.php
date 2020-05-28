@@ -17,10 +17,12 @@
 @endsection
 
 @section('content')
-  <div class="card offset-md-2 col-md-8">
+  <div class="card">
+    <div class="card-header bg-warning">
+      <div class="h5">Tambah materi</div>
+    </div>
     <div class="card-body">
-      <div class="h4">Tambah materi</div>
-      <form method="POST" action="{{ route('lecturer.lesson.store') }}" enctype="multipart/form-data">
+      <form method="POST" action="{{ route('lecturer.lesson.store') }}" enctype="multipart/form-data" id="myform">
         @csrf
         <div class="row">
           <div class="col-md-6">
@@ -35,7 +37,7 @@
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <label for="file">File</label>
+              <label for="file">Upload file</label>
               <div class="files">
                 <div class="input-group mb-3">
                   <div class="custom-file">
@@ -63,12 +65,19 @@
                 <li>Dokumen: doc/docx/pdf</li>
                 <li>Video: mp4/mkv</li>
                 <li>Audio: mp3/wav</li>
+                <li>Maks file: 3</li>
               </ul>
             </small>
           </div>
         </div>
-        <div class="text-right">
-          <button type="submit" class="btn btn-primary">Tambah</button>
+        <div class="">
+          <div class="float-left">
+            <a href="{{ route('lecturer.index') }}" class="btn btn-secondary">Daftar materi</a>
+          </div>
+          <div class="text-right">
+            <a href="" class="btn btn-default">Reset</a>
+            <button type="submit" class="btn btn-primary">Tambah</button>
+          </div>
         </div>
       </form>
     </div>

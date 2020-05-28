@@ -45,7 +45,12 @@ Route::group(['prefix' => 'lecturer', 'middleware' => ['auth:lecturer']], functi
   Route::get('/', 'LecturerController@index')->name('lecturer.index');
   Route::get('/lesson/create', 'LecturerController@lesson_create')->name('lecturer.lesson.create');
   Route::post('/lesson/store', 'LecturerController@lesson_store')->name('lecturer.lesson.store');
+  Route::get('/lesson/edit/{lesson_id}', 'LecturerController@lesson_edit')->name('lecturer.lesson.edit');
+  Route::post('/lesson/update', 'LecturerController@lesson_update')->name('lecturer.lesson.update');
+  Route::get('/lesson/delete/{lesson_id}', 'LecturerController@lesson_delete')->name('lecturer.lesson.delete');
 
+  Route::get('/lesson/file/{lessonfile_id}/delete', 'LecturerController@lessonfile_delete')->name('lecturer.lessons.files.delete');
+  Route::post('/lesson/file/upload', 'LecturerController@lessonfile_upload')->name('lecturer.lessons.files.store');
   // 
 });
 

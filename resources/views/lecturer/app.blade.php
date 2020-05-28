@@ -31,13 +31,19 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarText">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item {{ Route::currentRouteName() == 'lecturer.index' ? 'active' : '' }}">
+      @php
+          $route = Route::currentRouteName();
+          $arrLesson = ['lecturer.index', 'lecturer.lesson.create'];
+          $arrAssignment = [];
+          $arrQuiz = [];
+      @endphp
+      <li class="nav-item {{ in_array($route, $arrLesson) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('lecturer.index') }}">Materi</a>
       </li>
-      <li class="nav-item {{ Route::currentRouteName() == 'admin.lecturer' ? 'active' : '' }}">
+      <li class="nav-item {{ $route == 'admin.lecturer' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.lecturer') }}">Assignments</a>
       </li>
-      <li class="nav-item {{ Route::currentRouteName() == 'admin.lecturer' ? 'active' : '' }}">
+      <li class="nav-item {{ $route == 'admin.lecturer' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.lecturer') }}">Kuis</a>
       </li>
     </ul>

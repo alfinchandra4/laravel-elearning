@@ -19,17 +19,39 @@
 @section('content')
     <a href="{{ route('lecturer.lesson.create') }}">Tambah materi</a>
     <div class="card">
+      <div class="card-header bg-warning">
+        <div class="h5">Materi</div>
+      </div>
       <div class="card-body">
-        <div class="h4">Materi</div>
           <table class="table" id="datatable">
             <thead>
               <tr>
                 <th>#</th>
                 <th>Materi</th>
                 <th>Deskripsi</th>
+                <th>Dokumen</th>
                 <th>Opsi</th>
               </tr>
             </thead>
+            <tbody>
+              @php
+                  $lecturer_id = auth()->guard('lecturer')->user()->id;
+                  $lecturer_lessons = App\lesson::where('lecturer_id', $lecturer_id)->get();
+              @endphp
+              @foreach ($lecturer_lessons as $lesson)
+              <tr>
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $lesson->title }}</td>
+                <td>{{ $lesson->description }}</td>
+                <td>{{ $lesson->lesson_files->count() }}</td>
+                <td>
+                  <a href="{{ route('lecturer.lesson.edit', $lesson->id) }}">Ubah</a>
+                  -
+                  <a href="{{ route('lecturer.lesson.delete', $lesson->id) }}">Hapus</a>
+                </td>
+              </tr>                  
+              @endforeach
+            </tbody>
           </table>
       </div>
     </div>
