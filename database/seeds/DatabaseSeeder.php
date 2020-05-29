@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Admin;
+use App\Lecturer;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,6 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         factory(Admin::class)->create();
+        factory(Lecturer::class)->create();
         $this->call(Faculty::class);
         $this->call(Major::class);
     }

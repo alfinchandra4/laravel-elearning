@@ -15,7 +15,6 @@
   <!-- Toast CSS -->
   <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"/>
 
-  <!-- -->
   @yield('css')
 
 </head>
@@ -33,15 +32,15 @@
     <ul class="navbar-nav mr-auto">
       @php
           $route = Route::currentRouteName();
-          $arrLesson = ['lecturer.index', 'lecturer.lesson.create'];
-          $arrAssignment = [];
+          $arrLesson = ['lecturer.index', 'lecturer.lesson.create', 'lecturer.lesson.edit'];
+          $arrAssignment = ['lecturer.assignment.index', 'lecturer.assignment.create', 'lecturer.assignment.detail'];
           $arrQuiz = [];
       @endphp
       <li class="nav-item {{ in_array($route, $arrLesson) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('lecturer.index') }}">Materi</a>
       </li>
-      <li class="nav-item {{ $route == 'admin.lecturer' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.lecturer') }}">Assignments</a>
+      <li class="nav-item {{ in_array($route, $arrAssignment) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('lecturer.assignment.index') }}">Assignments</a>
       </li>
       <li class="nav-item {{ $route == 'admin.lecturer' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.lecturer') }}">Kuis</a>
@@ -64,6 +63,9 @@
 <div class="mt-2 mb-3 container">
   @yield('content')
 </div>
+<div class="p-3">
+  @yield('content-no-container')
+</div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -79,6 +81,10 @@
     <!-- Toast -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
     <!-- Datatables Starter -->
     <script>
       $(document).ready(function() {
@@ -86,9 +92,10 @@
       } );
     </script>
 
-
     <!-- Custom JS -->
     @yield('js')
+
+    @yield('modal')
 
 </body>
 </html>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class LoginController extends Controller
 {
@@ -22,7 +23,8 @@ class LoginController extends Controller
         } elseif (auth()->guard('lecturer')->attempt($credential)) {
             return redirect()->intended('/lecturer');
         } else {
-            return back()->withError('Invalid credentials!');
+            toast('Invalid credentials', 'error');
+            return back();
         }
     }
 

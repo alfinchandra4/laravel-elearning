@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Storage;
+
 use App\Lecturer;
 use App\Lesson;
 use App\Lessonfiles;
-use Illuminate\Support\Facades\Storage;
+use App\Assignment;
 
 class LecturerController extends Controller
 {
@@ -86,7 +88,7 @@ class LecturerController extends Controller
     }
 
     public function lesson_update(Request $request)
-    {  
+    {
         Lesson::find($request->lesson_id)->update([
             'title' => $request->title,
             'description' => $request->description
@@ -101,14 +103,14 @@ class LecturerController extends Controller
         $lesson_files = Lessonfiles::where('lesson_id', $lesson_id)->get();
 
         // Jika ada isinya
-        if($lesson_files !== null) {
+        if ($lesson_files !== null) {
 
             // Remove each files
             foreach ($lesson_files as $lesson_file) {
                 $url =  'public/lessons/' . $lesson_file->format . 's/' . $lesson_file->filename;
                 Storage::delete($url);
             }
-            
+
             // Then, remove all files where selected lesson id
             Lessonfiles::where('lesson_id', $lesson_id)->delete();
         }
@@ -131,7 +133,7 @@ class LecturerController extends Controller
 
     public function lessonfile_upload(Request $request)
     {
-        if($request->hasFile('file')) {
+        if ($request->hasFile('file')) {
             $docsformat = ['doc', 'docx', 'pdf'];
             $audioformat = ['mp3', 'wav', 'mpga'];
             $videoformat = ['mp4', 'mkv'];
@@ -169,5 +171,27 @@ class LecturerController extends Controller
             toast('File empty', 'error');
             return back();
         }
+    }
+
+    // Assignment
+    public function assignment()
+    {
+        return view('lecturer.assignments.index');
+    }
+
+    public function assignment_create()
+    {
+        return view('lecturer.assignments.create');
+    }
+
+    public function assignment_store(Request $request) {
+        // dd($request->all());
+        Assignment::create($request->all());
+        toast('Assignment created', 'success');
+        return back();
+    }
+
+    public function assignment_detail($assignment_detail = null) {
+        return view('lecturer.assignments.detail');
     }
 }

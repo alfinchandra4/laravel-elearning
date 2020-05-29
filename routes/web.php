@@ -48,10 +48,15 @@ Route::group(['prefix' => 'lecturer', 'middleware' => ['auth:lecturer']], functi
   Route::get('/lesson/edit/{lesson_id}', 'LecturerController@lesson_edit')->name('lecturer.lesson.edit');
   Route::post('/lesson/update', 'LecturerController@lesson_update')->name('lecturer.lesson.update');
   Route::get('/lesson/delete/{lesson_id}', 'LecturerController@lesson_delete')->name('lecturer.lesson.delete');
-
   Route::get('/lesson/file/{lessonfile_id}/delete', 'LecturerController@lessonfile_delete')->name('lecturer.lessons.files.delete');
   Route::post('/lesson/file/upload', 'LecturerController@lessonfile_upload')->name('lecturer.lessons.files.store');
-  // 
+
+  //  Assignments
+  Route::get('/assignment', 'LecturerController@assignment')->name('lecturer.assignment.index');
+  Route::get('/assignment/create', 'LecturerController@assignment_create')->name('lecturer.assignment.create');
+  Route::post('/assignment', 'LecturerController@assignment_store')->name('lecturer.assignment.store');
+  Route::get('/assignment/detail/{assignment_id?}', 'LecturerController@assignment_detail')->name('lecturer.assignment.detail');
+
 });
 
 Route::get('/session', 'ExampleController@session');

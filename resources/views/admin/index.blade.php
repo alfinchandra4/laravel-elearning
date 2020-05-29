@@ -1,6 +1,6 @@
 @extends('admin.app')
 
-@section('title', 'Mahasiswa')
+@section('title', 'Daftar mahasiswa')
 
 @section('css')
     <style>
