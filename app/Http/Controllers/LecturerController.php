@@ -10,9 +10,13 @@ use App\Lecturer;
 use App\Lesson;
 use App\Lessonfiles;
 use App\Assignment;
+use App\Quizzes;
+use App\Question;
+use App\Choices;
 
 class LecturerController extends Controller
 {
+
     // Lessons
     public function index()
     {
@@ -184,14 +188,117 @@ class LecturerController extends Controller
         return view('lecturer.assignments.create');
     }
 
-    public function assignment_store(Request $request) {
+    public function assignment_store(Request $request)
+    {
         // dd($request->all());
-        Assignment::create($request->all());
-        toast('Assignment created', 'success');
+        if ($request->description == null) {
+            toast('Deskripsi harus diisi', 'error');
+        } else {
+            Assignment::create($request->all());
+            toast('Assignment created', 'success');
+        }
         return back();
     }
 
-    public function assignment_detail($assignment_detail = null) {
+    public function assignment_detail($assignment_detail = null)
+    {
         return view('lecturer.assignments.detail');
+    }
+
+    // Quiz
+    public function quiz()
+    {
+        return view('lecturer.quiz.index');
+    }
+
+    public function quiz_create()
+    {
+        return view('lecturer.quiz.create');
+    }
+
+    public function quiz_store(Request $request)
+    {
+        $lecturer_id = auth()->guard('lecturer')->user()->id;
+        Quizzes::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'lecturer_id' => $lecturer_id
+        ]);
+        toast('Quiz created', 'success');
+        return back();
+    }
+
+    public function quiz_update(Request $request)
+    {
+        $data = [
+            'title' => $request->title,
+            'description' => $request->description
+        ];
+        Quizzes::find($request->quiz_id)->update($data);
+        toast('Quiz updated', 'success');
+        return back();
+    }
+
+    public function quiz_detail($quiz_id)
+    {
+        session()->put('quiz_id', $quiz_id);
+        $quiz = Quizzes::find($quiz_id);
+        return view('lecturer.quiz.general', [
+            'quiz' => $quiz,
+        ]);
+    }
+
+    public function quiz_question_index($quiz_id)
+    {
+        $lecturer_id = auth()->guard('lecturer')->user()->id;
+        $questions = Question::where('quiz_id', $quiz_id)->where('lecturer_id', $lecturer_id)->get();
+        return view('lecturer.quiz.questions', [
+            'questions' => $questions
+        ]);
+    }
+
+    public function quiz_question_store(Request $request)
+    {
+        $arrAnswersLength = count(array_filter($request->answers));
+        $numberChoice = $request->choices[0];
+        if ($numberChoice >= $arrAnswersLength) {
+            toast('Error! invalid input', 'error');
+            return back();
+        }
+
+        $lecturer_id = auth()->guard('lecturer')->user()->id;
+        $lastQuiz = Quizzes::latest()->first();
+        $quiz_id = $lastQuiz->id;
+        Question::create([
+            'question' => $request->question,
+            'quiz_id' => $quiz_id,
+            'lecturer_id' => $lecturer_id
+        ]);
+        $lastQuestion = Question::where('lecturer_id', $lecturer_id)->latest()->first();
+        $question_id = $lastQuestion->id;
+        for ($i = 0; $i < $arrAnswersLength; $i++) {
+            $ch = new Choices;
+            $ch->choice = $request->answers[$i];
+            $ch->question_id = $question_id;
+            if ($i == $numberChoice) {
+                $ch->correct = 1;
+            } else {
+                $ch->correct = 0;
+            }
+            $ch->save();
+        }
+        toast('Question created', 'success');
+        return back();
+    }
+
+    public function quiz_question_delete($question_id)
+    {
+        Question::find($question_id)->delete();
+        return back();
+    }
+
+    public function quiz_students($quiz_id)
+    {
+        return view('lecturer.quiz.students');
     }
 }

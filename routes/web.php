@@ -57,6 +57,19 @@ Route::group(['prefix' => 'lecturer', 'middleware' => ['auth:lecturer']], functi
   Route::post('/assignment', 'LecturerController@assignment_store')->name('lecturer.assignment.store');
   Route::get('/assignment/detail/{assignment_id?}', 'LecturerController@assignment_detail')->name('lecturer.assignment.detail');
 
+  // Kuis
+  Route::get('/quiz', 'LecturerController@quiz')->name('lecturer.quiz.index');
+  Route::get('/quiz/create', 'LecturerController@quiz_create')->name('lecturer.quiz.create');
+  Route::post('/quiz', 'LecturerController@quiz_store')->name('lecturer.quiz.store');
+  Route::post('/quiz/update', 'LecturerController@quiz_update')->name('lecturer.quiz.update');
+  Route::get('/quiz/detail/{quiz_id}', 'LecturerController@quiz_detail')->name('lecturer.quiz.detail');
+
+  Route::get('/quiz/question/{quiz_id}', 'LecturerController@quiz_question_index')->name('lecturer.quiz.question');
+  Route::post('/quiz/question', 'LecturerController@quiz_question_store')->name('lecturer.quiz.question.store');
+  Route::get('/quiz/question/delete/{question_id}', 'LecturerController@quiz_question_delete')->name('lecturer.quiz.question.delete');
+
+  Route::get('/quiz/students/{quiz_id}', 'LecturerController@quiz_students')->name('lecturer.quiz.student');
+
 });
 
 Route::get('/session', 'ExampleController@session');

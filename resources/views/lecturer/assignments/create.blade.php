@@ -14,25 +14,6 @@
         border-bottom: 3px solid green;
       }
     </style>
-    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
-      <script>
-
-
-tinymce.init({
-  selector: 'textarea',
-  menubar: false,
-  plugins: [
-    'advlist autolink lists link image charmap print preview anchor textcolor',
-    'searchreplace visualblocks code fullscreen',
-    'insertdatetime media table contextmenu paste code help wordcount'
-  ],
-  toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |',
-  branding: false,
-  resize: false
-});
-
-
-      </script>
 @endsection
 
 @section('content')
@@ -57,7 +38,7 @@ tinymce.init({
               </div>
               <div class="form-group col-md-6">
                 <label for="max_upload">Maximum file upload</label>
-                <input type="number" class="form-control" id="max_upload" min="1" max="3" name="max_upload">
+                <input type="number" class="form-control" id="max_upload" min="1" max="3" name="max_upload" required value="1">
                 <small class="form-text text-muted">Maximum allowed content upload for student, min: 1 - max: 3</small>
               </div>
             </div>

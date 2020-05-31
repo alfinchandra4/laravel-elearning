@@ -16,6 +16,25 @@
   <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"/>
 
   @yield('css')
+  <!-- Fonr Awesome CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!-- TinyMCE -->
+  <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+  <script>
+    tinymce.init({
+      selector: 'textarea',
+      menubar: false,
+      plugins: [
+        'advlist autolink lists link image charmap print preview anchor textcolor',
+        'searchreplace visualblocks code fullscreen',
+        'insertdatetime media table contextmenu paste code help wordcount'
+      ],
+      toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |',
+      branding: false,
+      resize: false
+    });
+  </script>
 
 </head>
 <body style="background-color: #f9f9f9">
@@ -31,10 +50,15 @@
   <div class="collapse navbar-collapse" id="navbarText">
     <ul class="navbar-nav mr-auto">
       @php
-          $route = Route::currentRouteName();
-          $arrLesson = ['lecturer.index', 'lecturer.lesson.create', 'lecturer.lesson.edit'];
+          $route         = Route::currentRouteName();
+          $arrLesson     = ['lecturer.index', 'lecturer.lesson.create', 'lecturer.lesson.edit'];
           $arrAssignment = ['lecturer.assignment.index', 'lecturer.assignment.create', 'lecturer.assignment.detail'];
-          $arrQuiz = [];
+          $arrQuiz       = [
+            'lecturer.quiz.index', 
+            'lecturer.quiz.detail',
+            'lecturer.quiz.question',
+            'lecturer.quiz.student',
+          ];
       @endphp
       <li class="nav-item {{ in_array($route, $arrLesson) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('lecturer.index') }}">Materi</a>
@@ -42,8 +66,8 @@
       <li class="nav-item {{ in_array($route, $arrAssignment) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('lecturer.assignment.index') }}">Assignments</a>
       </li>
-      <li class="nav-item {{ $route == 'admin.lecturer' ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.lecturer') }}">Kuis</a>
+      <li class="nav-item {{ in_array($route, $arrQuiz) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('lecturer.quiz.index') }}">Kuis</a>
       </li>
     </ul>
     <span class="navbar-text">

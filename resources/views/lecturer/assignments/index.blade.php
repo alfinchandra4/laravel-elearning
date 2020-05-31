@@ -17,8 +17,8 @@
 @endsection
 
 @section('content')
-    <a href="{{ route('lecturer.assignment.create') }}">Tambah assignment</a> |
-    <a href="#" data-toggle="modal" data-target="#exampleModal">Notifikasi</a> | 
+    <a href="{{ route('lecturer.assignment.create') }}">Tambah assignment</a> •
+    <a href="#" data-toggle="modal" data-target="#exampleModal">Notifikasi</a> •  
 
     <div class="card">
       <div class="card-header bg-warning">
@@ -28,7 +28,7 @@
       <div class="input-group mb-3">
         <input type="text" class="form-control col-md-6" placeholder="Masukkan judul assignment">
         <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="submit">Search</button>
+          <button class="btn btn-outline-secondary" type="submit">Cari</button>
         </div>
       </div>
         @php
