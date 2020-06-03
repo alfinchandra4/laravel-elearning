@@ -32,7 +32,7 @@
             </div>
             <div class="form-group">
               <label for="description">Deskripsi</label>
-              <textarea name="description" id="description" cols="30" rows="5" class="form-control" style="resize: none" required></textarea>
+              <textarea name="description" id="description" cols="30" rows="5" class="form-control"></textarea>
             </div>
           </div>
           <div class="col-md-6">

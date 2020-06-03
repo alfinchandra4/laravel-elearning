@@ -16,7 +16,7 @@
     </style>
 @endsection
 
-@section('content')
+@section('content-no-container')
   <div class="card">
     <div class="card-header bg-warning">
       <div class="h5">Ubah materi</div>

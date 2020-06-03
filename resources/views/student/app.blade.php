@@ -15,9 +15,11 @@
   <!-- Toast CSS -->
   <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"/>
 
-  @yield('css')
   <!-- Fonr Awesome CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  <!-- CSS -->
+  @yield('css')
 
   <!-- TinyMCE -->
   <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
@@ -48,38 +50,34 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarText">
+    @php
+        $route     = Route::currentRouteName();
+        $arrMateri = ['student.public.lessons'];
+        $arrAssignments = ['student.public.assignments', 'student.public.assignment.detail'];
+    @endphp
     <ul class="navbar-nav mr-auto">
-      @php
-          $route         = Route::currentRouteName();
-          $arrLesson     = ['lecturer.index', 'lecturer.lesson.create', 'lecturer.lesson.edit'];
-          $arrAssignment = ['lecturer.assignment.index', 'lecturer.assignment.create', 'lecturer.assignment.detail'];
-          $arrQuiz       = [
-            'lecturer.quiz.index', 
-            'lecturer.quiz.detail',
-            'lecturer.quiz.question',
-            'lecturer.quiz.student',
-          ];
-          $arrChats      = ['lecturer.chats']
-      @endphp
-      <li class="nav-item {{ in_array($route, $arrLesson) ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('lecturer.index') }}">Materi</a>
+      <li class="nav-item {{ in_array($route, $arrMateri) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route($arrMateri[0]) }}">Materi</a>
       </li>
-      <li class="nav-item {{ in_array($route, $arrAssignment) ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('lecturer.assignment.index') }}">Assignments</a>
+      <li class="nav-item {{ in_array($route, $arrAssignments) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route($arrAssignments[0]) }}">Assignment</a>
       </li>
-      <li class="nav-item {{ in_array($route, $arrQuiz) ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('lecturer.quiz.index') }}">Kuis</a>
-      </li>
-      <li class="nav-item {{ in_array($route, $arrChats) ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('lecturer.chats') }}">Chats</a>
+      <li class="nav-item">
+        <a class="nav-link" href=""">Kuis</a>
       </li>
     </ul>
     <span class="navbar-text">
        <li class="nav-item dropdown" style="list-style: none">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {{ Auth::guard('lecturer')->user()->name }}
+          {{ Auth::guard('student')->user()->name }}
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item text-dark" href="{{ route('student.self.lesson.enrolled') }}">Materi</a>
+          <a class="dropdown-item text-dark" href="{{ route('student.self.assignments') }}">Assignments</a>
+          <a class="dropdown-item text-dark" href="#">Kuis</a>
+          <a class="dropdown-item text-dark" href="#">Pesan</a>
+          <a class="dropdown-item text-dark" href="#">Profile</a>
+          <div class="dropdown-divider"></div>
           <a class="dropdown-item text-dark" href="/logout">Logout</a>
         </div>
       </li>
@@ -88,11 +86,8 @@
 </nav>
 
 <!-- Content -->
-<div class="mt-2 mb-3 container">
+<div class="container mt-2 mb-3">
   @yield('content')
-</div>
-<div class="p-3">
-  @yield('content-no-container')
 </div>
 
     <!-- Optional JavaScript -->
@@ -109,10 +104,6 @@
     <!-- Toast -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
     <!-- Datatables Starter -->
     <script>
       $(document).ready(function() {
@@ -122,8 +113,6 @@
 
     <!-- Custom JS -->
     @yield('js')
-
-    @yield('modal')
 
 </body>
 </html>

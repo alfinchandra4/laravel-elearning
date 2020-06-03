@@ -17,6 +17,7 @@
 @endsection
 
 @section('content')
+  <a href="{{ route('lecturer.assignment.index') }}">Semua assignment</a>
   <div class="card">
     <div class="card-header bg-warning">
       <div class="h5">Tambah assignment</div>
@@ -24,7 +25,7 @@
     <div class="card-body">
       <form method="POST" action="{{ route('lecturer.assignment.store') }}" id="create_assignment">
         @csrf
-        <input type="hidden" name="lecturer_id" value={{ auth()->guard('lecturer')->user()->id }}>
+        <input type="hidden" name="lecturer_id" value={{ lecturer()->id }}>
         <div class="row">
           <div class="col-md-12">
             <div class="form-group">
@@ -51,7 +52,6 @@
       </form>
         <div>
           <div class="float-left">
-            <a href="{{ route('lecturer.assignment.index') }}" class="btn btn-secondary">Semua assignment</a>
           </div>
           <div class="text-right">
             <button type="submit" class="btn btn-primary" form="create_assignment">Tambah</button>

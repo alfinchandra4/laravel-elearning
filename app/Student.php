@@ -28,4 +28,8 @@ class Student extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($value);
     }
+
+    public function student_enrolled(){ 
+        return $this->hasMany(Studentsenrolled::class, 'student_id', 'id');
+    }
 }

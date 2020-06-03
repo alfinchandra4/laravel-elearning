@@ -52,4 +52,8 @@ class ExampleController extends Controller
             'lecturer' => $lecturer
         ]);
     }
+
+    public function guard() {
+        return student()->name;
+    }
 }

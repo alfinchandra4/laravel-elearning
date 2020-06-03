@@ -7,6 +7,14 @@
   .card-header {
     border-bottom: 3px solid green;
   }
+  .question-choice{
+    color:green;
+    font-weight: bold;
+  }
+  .student-choice{
+    color:red;
+    font-weight: bold;
+  }
 </style>
 @endsection
 
@@ -26,14 +34,22 @@
   </div>
   <div class="col-md-6">
     <h4 class="font-weight-bold">Jawaban</h4>
-    <div class="alert alert-secondary" role="alert">
-      A simple secondary alert—check it out!
-    </div>
-    <div class="list-group">
-      <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
-      <a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
-      <a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
-    </div>
+    <div class="alert alert-secondary" role="alert"> Alfin Chandra, Skor: 5/10 </div>
+      @for ($i = 0; $i < 9; $i++)
+      <div class="card mb-1">
+        <div class="card-body pl-3 pb-0" style="padding: 5px">
+          <div class="question">1. Petani di indonesia ada berapa?</div>
+          <div class="answers">
+              <ol type="a">
+                <li>Ibu jari</li>
+                <li>Ibu Kaki</li>
+                <li class="question-choice">Ibu Sud</li>
+                <li class="student-choice">Ibu Teh nung</li>
+              </ol>
+          </div>
+        </div>
+      </div> 
+      @endfor
   </div>
 </div>
 @endsection

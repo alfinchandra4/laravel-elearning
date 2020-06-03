@@ -23,7 +23,7 @@
         <div class="h5">Materi</div>
       </div>
       <div class="card-body">
-          <table class="table" id="datatable">
+          <table class="table table-striped table-hover table-sm" id="datatable">
             <thead>
               <tr>
                 <th>#</th>
@@ -35,14 +35,14 @@
             </thead>
             <tbody>
               @php
-                  $lecturer_id = auth()->guard('lecturer')->user()->id;
+                  $lecturer_id = lecturer()->id;
                   $lecturer_lessons = App\lesson::where('lecturer_id', $lecturer_id)->get();
               @endphp
               @foreach ($lecturer_lessons as $lesson)
               <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $lesson->title }}</td>
-                <td>{{ $lesson->description }}</td>
+                <td>{!! Str::words($lesson->description, '10'); !!}</td>
                 <td>{{ $lesson->lesson_files->count() }}</td>
                 <td>
                   <a href="{{ route('lecturer.lesson.edit', $lesson->id) }}">Ubah</a>

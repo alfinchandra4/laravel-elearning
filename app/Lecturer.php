@@ -25,4 +25,18 @@ class Lecturer extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($value);
     }
+
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class, 'lecturer_id', 'id');
+    }
+
+    public function student_enrolled()
+    {
+        return $this->hasMany(Studentsenrolled::class, 'lecturer_id', 'id');
+    }
+
+    public function assignment() {
+        return $this->hasMany(Lecturer::class, 'lecturer_id', 'id');
+    }
 }

@@ -36,7 +36,18 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin']], function () 
 });
 
 Route::group(['prefix' => 'student', 'middleware' => ['auth:student']], function () {
-  Route::view('/home', 'student.index')->name('student.index');
+  Route::get('/', 'StudentController@public_lessons')->name('student.public.lessons');
+  Route::get('/enroll/{lesson_id}', 'StudentController@public_lessons_enroll')->name('student.public.lesson.enroll');
+  Route::get('/lessons/enrolled', 'StudentController@self_lessons_enrolled')->name('student.self.lesson.enrolled');
+  Route::get('/lesson/detail/{lesson_id}', 'StudentController@self_lesson_detail')->name('student.self.lesson.detail');
+
+  Route::get('/assignments', 'StudentController@public_assignments')->name('student.public.assignments');
+  Route::get('/assignment/detail/{assignment_id}', 'StudentController@public_assignment_detail')->name('student.public.assignment.detail');
+  Route::post('/assignment', 'StudentController@public_assignment_store')->name('studetns.public.assignment.store');
+  Route::get('/myassignments', 'StudentController@self_assignments')->name('student.self.assignments');
+  Route::get('/myassignment/detail/{assignment_id}', 'StudentController@self_assignment_detail')->name('student.self.assignment.detail');
+
+  Route::post('/myassignment/update/text', 'StudentController@self_assignment_update_text')->name('student.self.assignment.update.text');
 });
 
 Route::group(['prefix' => 'lecturer', 'middleware' => ['auth:lecturer']], function () {
@@ -70,6 +81,9 @@ Route::group(['prefix' => 'lecturer', 'middleware' => ['auth:lecturer']], functi
 
   Route::get('/quiz/students/{quiz_id}', 'LecturerController@quiz_students')->name('lecturer.quiz.student');
 
+  // Live cha (POV: Lecturer)
+  Route::get('/chats', 'LecturerController@chats')->name('lecturer.chats');
+
 });
 
 Route::get('/session', 'ExampleController@session');
@@ -77,3 +91,4 @@ Route::get('/test', 'ExampleController@test');
 Route::get('/getmajor/{faculty_id}', 'ExampleController@getmajor');
 Route::get('/getstudent/{student_id}', 'ExampleController@getstudent');
 Route::get('/getlecturer/{lecturer_id}', 'ExampleController@getlecturer');
+Route::get('/guard', 'ExampleController@guard');

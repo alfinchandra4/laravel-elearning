@@ -50,10 +50,10 @@ class LecturerController extends Controller
         Lesson::create([
             'title' => $request->title,
             'description' => $request->description,
-            'lecturer_id' => auth()->guard('lecturer')->user()->id
+            'lecturer_id' => lecturer()->id
         ]);
 
-        $get_latest_lesson_id = Lesson::where('lecturer_id', auth()->guard('lecturer')->user()->id)->latest()->first();
+        $get_latest_lesson_id = Lesson::where('lecturer_id', lecturer()->id)->latest()->first();
         $set_latest_lesson_id = $get_latest_lesson_id->id;
 
         foreach ($request->file as $file) {
@@ -218,7 +218,7 @@ class LecturerController extends Controller
 
     public function quiz_store(Request $request)
     {
-        $lecturer_id = auth()->guard('lecturer')->user()->id;
+        $lecturer_id = lecturer()->id;
         Quizzes::create([
             'title' => $request->title,
             'description' => $request->description,
@@ -250,7 +250,7 @@ class LecturerController extends Controller
 
     public function quiz_question_index($quiz_id)
     {
-        $lecturer_id = auth()->guard('lecturer')->user()->id;
+        $lecturer_id = lecturer()->id;
         $questions = Question::where('quiz_id', $quiz_id)->where('lecturer_id', $lecturer_id)->get();
         return view('lecturer.quiz.questions', [
             'questions' => $questions
@@ -266,7 +266,7 @@ class LecturerController extends Controller
             return back();
         }
 
-        $lecturer_id = auth()->guard('lecturer')->user()->id;
+        $lecturer_id = lecturer()->id;
         $lastQuiz = Quizzes::latest()->first();
         $quiz_id = $lastQuiz->id;
         Question::create([
@@ -300,5 +300,10 @@ class LecturerController extends Controller
     public function quiz_students($quiz_id)
     {
         return view('lecturer.quiz.students');
+    }
+
+    public function chats()
+    {
+        return view('lecturer.livechat.index');
     }
 }

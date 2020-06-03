@@ -25,53 +25,36 @@
         <div class="h5">Assignment</div>
       </div>
       <div class="card-body">
-      <div class="input-group mb-3">
-        <input type="text" class="form-control col-md-6" placeholder="Masukkan judul assignment">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="submit">Cari</button>
-        </div>
-      </div>
         @php
           $assignments = App\Assignment::where('lecturer_id', auth()->guard('lecturer')
-          ->user()->id)->orderByDesc('created_at')->paginate(10);
+          ->user()->id)->orderByDesc('created_at')->get();
         @endphp
-        @foreach ($assignments as $ass)
-        <div class="card mb-1">
-          <div class="card-body" style="padding:10px">
-            <div class="row">
-              <div class="part-no col-md-1">
-                <div class="no text-muted" style="font-size: 10pt">No.</div>
-                <div>{{ ($assignments->currentpage()-1) * $assignments->perpage() + $loop->index + 1 }}</div>
-              </div>
-              <div class="part-title col-md-5">
-                <div class="title text-muted" style="font-size: 10pt">Judul</div>
-                <div>{{ $ass->title }}</div>
-              </div>
-              <div class="part-participants col-md-2">
-                <div class="participants text-muted" style="font-size: 10pt">Partisipan</div>
-                <div>
-                  6 Mahasiswa
-                </div>
-              </div>
-              <div class="part-deadline col-md-2">
-                <div class="deadline text-muted" style="font-size: 10pt">Deadline</div>
-                <div>{{ date('d/m/y H:i', strtotime($ass->deadline)) }}</div>
-              </div>
-              <div class="part-options col-md-2">
-                <div class="options text-muted" style="font-size: 10pt">Opsi</div>
-                <div>
-                  <span class="badge badge-primary">Detail</span>
-                  <span class="badge badge-secondary">Ubah</span>
-                  <span class="badge badge-danger">Hapus</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        @endforeach
-        <div>
-          {{ $assignments->links() }}
-        </div>
+            <table class="table table-hover table-striped table-hover" id="datatable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Judul</th>
+                  <th>Partisipan</th>
+                  <th>Deadline</th>
+                  <th>Opsi</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach ($assignments as $ass)
+                <tr>
+                  <td>{{ $loop->iteration }}</td>
+                  <td>{{ Str::words($ass->title, 6) }}</td>
+                  <td>6 Mahasiswa</td>
+                  <td>{{ date('d/m/y H:i', strtotime($ass->deadline)) }}</td>
+                  <td>
+                    <span class="badge badge-primary">Detail</span>
+                    <span class="badge badge-secondary">Ubah</span>
+                    <span class="badge badge-danger">Hapus</span>
+                  </td>
+                </tr>
+                @endforeach
+              </tbody>
+            </table>
       </div>
     </div>
 @endsection

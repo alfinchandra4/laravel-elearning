@@ -25,7 +25,7 @@
       <div class="card-body"> 
         <div class="list-group">
           @php
-              $quizzes = App\Quizzes::where('lecturer_id', auth()->guard('lecturer')->user()->id)
+              $quizzes = App\Quizzes::where('lecturer_id', lecturer()->id)
                                     ->orderByDesc('created_at')
                                     ->get();
           @endphp
