@@ -25,11 +25,11 @@
   @endphp
   @if ($today <= $deadline)
     <h5 class="badge btn-success" style="font-size: 12pt">
-      OPEN ᛫ {{ $deadline }}
+      OPEN ᛫ {{ date('d/m/y H:i:s', strtotime($deadline)) }}
     </h5>
   @else
     <h5 class="badge btn-danger" style="font-size: 12pt">
-      CLOSED ᛫ {{ $deadline }}
+      CLOSED ᛫ {{ date('d/m/y H:i:s', strtotime($deadline)) }}
     </h5>
   @endif
 
@@ -41,69 +41,74 @@
   <h5>Deskripsi</h5>
   <div class="font-weight-lighter">{!! $assignment->description !!}</div>
   <h5>Kirim jawaban</h5> 
-  @if ($today <= $deadline)
-    {{-- <a href="">Edit jawaban</a>     --}}
-      @if ($student_assignment_text !== null) 
-        <form action="{{ route('student.self.assignment.update.text') }}" method="post">
-          @csrf
-          <input type="hidden" name="assignment_id" value="{{ $assignment->id }}">
-          <input type="hidden" name="student_assignment_id" value="{{ $student_assignment_id }}">
-          <textarea name="text" id="text" cols="30" rows="7" class="form-control">{!! $student_assignment_text->text !!}</textarea>
-          <button type="submit" class="btn btn-primary mt-2">Perbarui</button>
-        </form>
-      @endif
-  @else
-    <div class="card">
-      <div class="card-body">
-        {!! $student_assignment_text->text !!}
-      </div>
-    </div>  
-  @endif
 
-  @if ($student_assignment_files !== null)
-      
+  @isset ($student_assignment_text) 
+    @if ($today <= $deadline)
+      <form action="{{ route('student.self.assignment.update.text') }}" method="post">
+        @csrf
+        <input type="hidden" name="assignment_id" value="{{ $assignment->id }}">
+        <input type="hidden" name="student_assignment_id" value="{{ $student_assignment_id }}">
+        <textarea name="text" id="text" cols="30" rows="7" class="form-control">{!! $student_assignment_text->text !!}</textarea>
+        <button type="submit" class="btn btn-primary mt-2">Perbarui</button>
+      </form>
+    @else
+      <div class="card">
+        <div class="card-body">
+          {!! $student_assignment_text->text !!}
+        </div>
+      </div> 
+    @endif 
+  @endisset
+
+  @if (!$student_assignment_files->isEmpty())
+    @php
+      $assignment = App\Assignment::find($assignment_id);
+      $max_upload = $assignment->max_upload;
+    @endphp
+    <div class="form-group">
+      @if ($today <= $deadline)
+      <label for="file">Upload file</label>
+      <div class="files">
+          <div class="input-group mb-3">
+            <form action="{{ route('student.self.assignment.update.files') }}" method="post" id="addFileFrm" enctype="multipart/form-data"> @csrf </form>
+            <input type="hidden" name="assignment_id" value="{{ $assignment->id }}" form="addFileFrm">
+            <input type="hidden" name="student_assignment_id" value="{{ $student_assignment_id }}" form="addFileFrm">
+            <div class="custom-file">
+              <input type="file" {{ $student_assignment_files->count() >= $max_upload ? 'disabled' : '' }} class="custom-file-input custom-file-input-sm inputfile" name="file" form="addFileFrm" required>
+              <label class="custom-file-label file-label">Choose file</label>
+            </div>
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" form="addFileFrm" type="submit">Upload</button>
+            </div>
+          </div>
+        @endif
+        <ul class="list-group list-group-flush">
+          @foreach ($student_assignment_files as $file)
+            @switch($file->format)
+                @case('doc') @php   $url = 'assignments/docs/'.$file->filename @endphp @break
+                @case('video') @php $url = 'assignments/videos/'.$file->filename @endphp @break
+                @case('audio') @php $url = 'assignments/audios/'.$file->filename @endphp @break
+            @endswitch
+            <li class="list-group-item list-group-item-secondary float-left">
+              <a href="{{ Storage::url($url) }}">{{ $file->filename }}</a>
+                @if ($today <= $deadline)
+                  <div class="float-right text-danger font-weight-bold">
+                    <a href="{{ route('student.assignment.files.delete', $file->id) }}" class="btn btn-sm btn-danger">X</a>
+                  </div>
+                @endif
+            </li>
+          @endforeach  
+        </ul>
+      </div>
+    </div>
   @endif
 @endsection
 
 @section('js')
     <script>
-      var answerText  = document.querySelector(".answer-text");
-      var answerFiles = document.querySelector(".answer-files");
-      var noAnswer    = document.querySelector(".no-answer");
-      var modelText = document.querySelector("#model_text");
-      var modelFiles = document.querySelector("#model_files");
-
-      noAnswer.style.display = 'block';
-
-      var select = document.querySelector("#model").addEventListener('change', function() {
-        answerText.style.display = 'none';
-        answerFiles.style.display = 'none';
-        noAnswer.style.display = 'none';
-        option_value = this.value;
-          if (option_value == 1) {
-            answerText.style.display = 'block';
-            modelText.value = option_value;
-          } else if(option_value == 2) {
-            answerFiles.style.display = 'block';
-            modelFiles.value = option_value;
-          } else {
-            noAnswer.style.display = 'block';
-          }
-      });
-    </script>
-
-    <script>
-      $('#inputfile0').on('change',function(){
+      $('.inputfile').on('change',function(){
           var fileName = $(this)[0].files[0].name;
-          document.querySelector('.file-label0').innerHTML = fileName;
-      });
-      $('#inputfile1').on('change',function(){
-          var fileName = $(this)[0].files[0].name;
-          document.querySelector('.file-label1').innerHTML = fileName;
-      });
-      $('#inputfile2').on('change',function(){
-          var fileName = $(this)[0].files[0].name;
-          document.querySelector('.file-label2').innerHTML = fileName;
+          document.querySelector('.file-label').innerHTML = fileName;
       });
     </script>
 @endsection

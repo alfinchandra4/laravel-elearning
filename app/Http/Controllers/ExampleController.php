@@ -13,6 +13,7 @@ class ExampleController extends Controller
     public function session()
     {
         dd(session()->all());
+        // session()->forget('student_assignment_files');
     }
 
     public function test()

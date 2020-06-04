@@ -17,6 +17,7 @@
 @endsection
 
 @section('content')
+  <a href="#" data-toggle="modal" data-target="#add_new_student"> Tambah mahasiswa </a>
   <div class="mb-1">
     @php
         $faculties = App\Faculty::all();
@@ -35,9 +36,9 @@
   <div class="card">
     <div class="card-header bg-warning">
         <div class="h5 float-left">Daftar mahasiswa</div>
-        <div class="float-right">
+        {{-- <div class="float-right">
           <a href="#" data-toggle="modal" data-target="#add_new_student" class="text-dark"> Tambah mahasiswa </a>
-        </div>
+        </div> --}}
     </div>
     <div class="card-body">
         <table id="datatable" class="table table-striped table-sm" style="width:100%">
@@ -56,9 +57,9 @@
           <tbody id="tbody" class="font-weight-lighter">
               @php
                   if(session('faculty_id') == null) {
-                    $students = App\Student::all();
+                    $students = App\Student::orderByDesc('created_at')->get();
                   } else {
-                    $selected_majors = App\Major::where('faculty_id', session('faculty_id'))->get();
+                    $selected_majors = App\Major::where('faculty_id', session('faculty_id'))->orderByDesc('created_at')->get();
                     $arr_selected_majors = [];
                     foreach ($selected_majors as $val) { $arr_selected_majors[] = $val->id; }
                     $students = App\Student::whereIn('major_id', $arr_selected_majors)->get();

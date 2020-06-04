@@ -13,4 +13,8 @@ class Assignment extends Model
     public function lecturer() {
         return $this->belongsTo(Lecturer::class, 'lecturer_id');
     }
+
+    public function student_assignment() {
+        return $this->hasMany(Studentassignment::class, 'assignment_id', 'id');
+    }
 }

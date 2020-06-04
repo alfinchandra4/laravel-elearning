@@ -16,7 +16,8 @@
     </style>
 @endsection
 
-@section('content-no-container')
+@section('content')
+  <a href="{{ route('lecturer.index') }}">Daftar materi</a>
   <div class="card">
     <div class="card-header bg-warning">
       <div class="h5">Ubah materi</div>
@@ -24,8 +25,6 @@
     <div class="card-body">
       <form method="POST" action="{{ route('lecturer.lesson.update') }}" enctype="multipart/form-data" id="myform">@csrf</form>
         <input type="hidden" name="lesson_id" value="{{ $lesson->id }}" form="myform"/>
-        <div class="row">
-          <div class="col-md-6">
             <div class="form-group">
               <label for="title">Judul</label>
               <input type="text" name="title" id="title" class="form-control" required value="{{ $lesson->title }}" form="myform">
@@ -34,8 +33,6 @@
               <label for="description">Deskripsi</label>
               <textarea name="description" id="description" cols="30" rows="5" class="form-control" style="resize: none" required form="myform">{{ $lesson->description }}</textarea>
             </div>
-          </div>
-          <div class="col-md-6">
             <div class="form-group">
               <label for="file">Upload file</label>
               <div class="files">
@@ -88,11 +85,8 @@
                 <li>Maks file: 3</li>
               </ul>
             </small>
-          </div>
-        </div>
         <div class="">
           <div class="float-left">
-            <a href="{{ route('lecturer.index') }}" class="btn btn-secondary">Daftar materi</a>
           </div>
           <div class="text-right">
             <button type="submit" class="btn btn-primary" form="myform">Update</button>

@@ -18,7 +18,7 @@
 
 @section('content')
     <a href="{{ route('lecturer.assignment.create') }}">Tambah assignment</a> •
-    <a href="#" data-toggle="modal" data-target="#exampleModal">Notifikasi</a> •  
+    <a href="{{ route('lecturer.assignment.index') }}" data-toggle="modal" data-target="#exampleModal" id="mymodal">Notifikasi</a> •  
 
     <div class="card">
       <div class="card-header bg-warning">
@@ -26,14 +26,13 @@
       </div>
       <div class="card-body">
         @php
-          $assignments = App\Assignment::where('lecturer_id', auth()->guard('lecturer')
-          ->user()->id)->orderByDesc('created_at')->get();
+          $assignments = App\Assignment::where('lecturer_id', lecturer()->id)->orderByDesc('created_at')->get();
         @endphp
             <table class="table table-hover table-striped table-hover" id="datatable">
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Judul</th>
+                  <th style="width: 40%">Judul</th>
                   <th>Partisipan</th>
                   <th>Deadline</th>
                   <th>Opsi</th>
@@ -44,11 +43,25 @@
                 <tr>
                   <td>{{ $loop->iteration }}</td>
                   <td>{{ Str::words($ass->title, 6) }}</td>
-                  <td>6 Mahasiswa</td>
-                  <td>{{ date('d/m/y H:i', strtotime($ass->deadline)) }}</td>
+                  <td>{{$ass->student_assignment->count()}} Mhs</td>
                   <td>
-                    <span class="badge badge-primary">Detail</span>
-                    <span class="badge badge-secondary">Ubah</span>
+                      @php
+                          $deadline = date('Y-m-d H:i:s', strtotime($ass->deadline));
+                          $today    = date('Y-m-d H:i:s');
+                      @endphp
+                      @if ($today <= $deadline)
+                      <span class="badge badge-success">OPEN {{ date('d/m/y H:i', strtotime($ass->deadline)) }}</span>
+                      @else
+                      <span class="badge badge-danger">CLOSED {{ date('d/m/y H:i', strtotime($ass->deadline)) }}</span>
+                      @endif
+                  </td>
+                  <td>
+                    <span class="badge badge-primary">
+                      <a href="{{ route('lecturer.assignment.detail', $ass->id) }}" class="text-white">Detail</a>
+                    </span>
+                    <span class="badge badge-secondary">
+                      <a href="{{ route('lecturer.assignment.edit', $ass->id) }}" class="text-white">Ubah</a>
+                    </span>
                     <span class="badge badge-danger">Hapus</span>
                   </td>
                 </tr>
@@ -66,19 +79,21 @@
       <div class="modal-content">
         <div class="modal-body">
           <div class="h5">Notifikasi terbaru</div>
+          @php
+              $student_assignments = App\Studentassignment::whereIn('assignment_id', function($q) {
+                $q->select('id')->from('assignments')->where('lecturer_id', lecturer()->id);
+              })->orderByDesc('created_at')->get();
+              // dd($student_assignments);
+          @endphp
           <div class="list-group">
-            <a href="{{ route('lecturer.assignment.detail') }}" class="list-group-item list-group-item-action">
-              <div class="float-left">Lorem ipsum dolor sit amet consectetur</div>
-              <div class="float-right font-weight-bold">Alfin Chandra4</div>
-              <br/>
-              <div class="float-right text-muted" style="font-size: 10pt">Mon, 3/10/19 22:17</div>
-            </a>
-            <a href="#" class="list-group-item list-group-item-action">
-              <div class="float-left">Lorem ipsum dolor sit amet consectetur</div>
-              <div class="float-right font-weight-bold">Alfin Chandra4</div>
-              <br/>
-              <div class="float-right text-muted" style="font-size: 10pt">Mon, 3/10/19 22:17</div>
-            </a>
+            @foreach ($student_assignments as $student_assignment)
+              <a href="{{ route('lecturer.assignment.detail', $student_assignment->assignment->id) }}" class="list-group-item list-group-item-action">
+                <div class="float-left">{{ Str::words($student_assignment->assignment->title, 6) }}</div>
+                <div class="float-right font-weight-bold">{{ $student_assignment->student->name }}</div>
+                <br/>
+                <div class="float-right text-muted" style="font-size: 10pt"> {{ date('D, d/m/y H:i', strtotime($student_assignment->created_at))}} </div>
+              </a>
+            @endforeach
           </div>
         </div>
       </div>
@@ -87,5 +102,17 @@
 @endsection
 
 @section('js')
+  <script>
+    $("#mymodal").click(function(ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+        console.log(target)
+
+        // load the url and show modal on success
+        $("#mymodal .modal-body").load(target, function() { 
+            $("#mymodal").modal("show"); 
+        });
+    });
+  </script>
 @endsection
 

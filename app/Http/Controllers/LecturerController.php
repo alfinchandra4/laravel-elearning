@@ -13,6 +13,9 @@ use App\Assignment;
 use App\Quizzes;
 use App\Question;
 use App\Choices;
+use App\Studentassignment;
+use App\Studentassignmentfiles;
+use App\Studentassignmenttext;
 
 class LecturerController extends Controller
 {
@@ -58,7 +61,7 @@ class LecturerController extends Controller
 
         foreach ($request->file as $file) {
             $file_ext = $file->extension();
-            $file_name = $file->getClientOriginalName();
+            $file_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . time() . '.' . $file_ext;
             $url = '';
             if (in_array($file_ext, $docsformat)) {
                 $format = 'doc';
@@ -97,7 +100,7 @@ class LecturerController extends Controller
             'title' => $request->title,
             'description' => $request->description
         ]);
-        toast('Materi berhasil update', 'success');
+        toast('Updated', 'success');
         return back();
     }
 
@@ -144,7 +147,7 @@ class LecturerController extends Controller
             $arrAllFormatFile = array_merge($docsformat, $audioformat, $videoformat);
             $file = $request->file;
             $file_ext = $file->extension();
-            $file_name = $file->getClientOriginalName();
+            $file_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . time() . '.' . $file_ext;
             // $file_name = time() . '.' . $file_ext;
 
             if (in_array($file_ext, $arrAllFormatFile)) {
@@ -166,7 +169,7 @@ class LecturerController extends Controller
                     'lesson_id' => $request->lesson_id
                 ]);
 
-                toast('Berhasil tambah file', 'success');
+                toast('File added', 'success');
                 return back();
             }
             toast('Format file not allowed', 'error');
@@ -188,6 +191,28 @@ class LecturerController extends Controller
         return view('lecturer.assignments.create');
     }
 
+    public function assignment_edit($assignment_id) {
+        $assignment = Assignment::find($assignment_id);
+        if($assignment !== null ) {
+            return view('lecturer.assignments.edit', [
+                'assignment' => $assignment
+            ]);
+        } else {
+            toast('Assignment not found', 'error');
+            return back();
+        }
+    }
+
+    public function assignment_update(Request $request) {
+        Assignment::find($request->assignment_id)->update([
+            'title' => $request->title,
+            'deadline' => $request->deadline,
+            'description' => $request->description
+        ]);
+        toast('Assignment updated', 'success');
+        return back();
+    }
+
     public function assignment_store(Request $request)
     {
         // dd($request->all());
@@ -200,9 +225,44 @@ class LecturerController extends Controller
         return back();
     }
 
-    public function assignment_detail($assignment_detail = null)
+    public function assignment_detail($assignment_id = null)
     {
-        return view('lecturer.assignments.detail');
+        $assignment = Assignment::find($assignment_id);
+        $students_assignment = Studentassignment::where('assignment_id', $assignment_id)->orderByDesc('created_at')->get();
+        return view('lecturer.assignments.detail', [
+            'assignment' => $assignment,
+            'students_assignment' => $students_assignment
+        ]);
+    }
+
+    public function assignment_student_get($student_assignment_id) {
+        $student_asignment = Studentassignment::find($student_assignment_id);
+        $assignment_id     = $student_asignment->assignment->id;
+        $student_id = $student_asignment->student->id;
+
+        session()->put('assignment_id', $assignment_id);
+        session()->put('student_id', $student_id);
+
+        $student_assignment_mode = $student_asignment->format;
+        if ($student_assignment_mode == 'text') {
+            $student_assignment_mode_text = 
+                Studentassignmenttext::where('assignment_id', $assignment_id)
+                                     ->where('student_id', $student_id)
+                                     ->where('student_assignment_id', $student_assignment_id)
+                                     ->first();
+                session()->forget('answer_files');
+                session()->put('answer_text', $student_assignment_mode_text->text);
+        } elseif ($student_assignment_mode == 'files') {
+            $student_assignment_mode_files = 
+                Studentassignmentfiles::where('assignment_id', $assignment_id)
+                                      ->where('student_id', $student_id)
+                                      ->where('student_assignment_id', $student_assignment_id)
+                                      ->get();
+                session()->forget('answer_text');
+                session()->put('answer_files', $student_assignment_mode_files);
+        }
+
+        return redirect()->route('lecturer.assignment.detail', $assignment_id);
     }
 
     // Quiz

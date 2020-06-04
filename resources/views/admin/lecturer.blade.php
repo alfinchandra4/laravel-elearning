@@ -17,12 +17,13 @@
 @endsection
 
 @section('content')
+  <a href="#" data-toggle="modal" data-target="#add_new_lecturer"> Tambah dosen </a>
   <div class="card">
     <div class="card-header bg-warning">
         <div class="h5 float-left">Daftar dosen</div>
-        <div class="float-right">
-          <a href="#" data-toggle="modal" data-target="#add_new_lecturer" class="text-dark"> Tambah dosen </a>
-        </div>
+        {{-- <div class="float-right">
+          <a href="#" data-toggle="modal" data-target="#add_new_lecturer"> Tambah dosen </a>
+        </div> --}}
     </div>
     <div class="card-body">
         <table id="datatable" class="table table-striped table-sm" style="width:100%">

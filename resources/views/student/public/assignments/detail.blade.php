@@ -25,11 +25,11 @@
   @endphp
   @if ($today <= $deadline)
     <h5 class="badge btn-success" style="font-size: 12pt">
-      OPEN ᛫ {{ $deadline }}</> 
+      OPEN ᛫ {{ date('d/m/y H:i:s' ,strtotime($deadline)) }}</> 
     </h5>
   @else
     <h5 class="badge btn-danger" style="font-size: 12pt">
-      CLOSED ᛫ {{ $deadline }}</> 
+      CLOSED ᛫ {{ date('d/m/y H:i:s' ,strtotime($deadline)) }}</> 
     </h5>
   @endif
 
@@ -47,7 +47,7 @@
     </select>
     <div id="output">
       <div class="answer-text" style="display: none">
-        <form action="{{ route('studetns.public.assignment.store') }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('student.public.assignment.store') }}" method="post" enctype="multipart/form-data">
           @csrf
           <textarea name="answer_text" cols="30" rows="10" style="height: 300px" class="mb-2"></textarea>
           <div class="mt-2">
@@ -58,16 +58,23 @@
         </form>
       </div>
       <div class="answer-files" style="display: none">
-        <form action="{{ route('studetns.public.assignment.store') }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('student.public.assignment.store') }}" method="post" enctype="multipart/form-data">
           @csrf
           @for ($i = 0; $i < $assignment->max_upload; $i++)
             <div class="input-group mb-1 col-md-4">
               <div class="custom-file">
-                <input type="file" class="custom-file-input custom-file-input-sm" id="inputfile{{$i}}" name="files[]">
+                <input type="file" class="custom-file-input custom-file-input-sm" id="inputfile{{$i}}" name="file[]">
                 <label class="custom-file-label file-label{{$i}}">Choose file</label>
               </div>
             </div>
           @endfor
+          <small class="text-muted mt-2">
+            Format yang diperbolehkan
+            <ul>
+              <li>Dokumen: doc/docx/pdf</li>
+              <li>Video: mp4/mkv</li>
+              <li>Audio: mp3/wav</li>
+            </ul>
           <div class="mt-2">
             <input type="hidden" name="model" id="model_files">
             <input type="hidden" name="assignment_id" id="assignment_id" value="{{ $assignment->id }}">

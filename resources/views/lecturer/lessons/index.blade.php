@@ -28,7 +28,6 @@
               <tr>
                 <th>#</th>
                 <th>Materi</th>
-                <th>Deskripsi</th>
                 <th>Dokumen</th>
                 <th>Opsi</th>
               </tr>
@@ -42,10 +41,9 @@
               <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $lesson->title }}</td>
-                <td>{!! Str::words($lesson->description, '10'); !!}</td>
                 <td>{{ $lesson->lesson_files->count() }}</td>
                 <td>
-                  <a href="{{ route('lecturer.lesson.edit', $lesson->id) }}">Ubah</a>
+                  <a href="{{ route('lecturer.lesson.edit', $lesson->id) }}">Detail</a>
                   -
                   <a href="{{ route('lecturer.lesson.delete', $lesson->id) }}">Hapus</a>
                 </td>

@@ -43,11 +43,14 @@ Route::group(['prefix' => 'student', 'middleware' => ['auth:student']], function
 
   Route::get('/assignments', 'StudentController@public_assignments')->name('student.public.assignments');
   Route::get('/assignment/detail/{assignment_id}', 'StudentController@public_assignment_detail')->name('student.public.assignment.detail');
-  Route::post('/assignment', 'StudentController@public_assignment_store')->name('studetns.public.assignment.store');
+  Route::post('/assignment', 'StudentController@public_assignment_store')->name('student.public.assignment.store');
   Route::get('/myassignments', 'StudentController@self_assignments')->name('student.self.assignments');
   Route::get('/myassignment/detail/{assignment_id}', 'StudentController@self_assignment_detail')->name('student.self.assignment.detail');
 
+  // Text update
   Route::post('/myassignment/update/text', 'StudentController@self_assignment_update_text')->name('student.self.assignment.update.text');
+  Route::post('/myassignment/update/files', 'StudentController@self_assignment_update_files')->name('student.self.assignment.update.files');
+  Route::get('/myassignment/files/delete/{student_assignment_file_id}', 'StudentController@self_assignment_delete_file')->name('student.assignment.files.delete');
 });
 
 Route::group(['prefix' => 'lecturer', 'middleware' => ['auth:lecturer']], function () {
@@ -66,7 +69,10 @@ Route::group(['prefix' => 'lecturer', 'middleware' => ['auth:lecturer']], functi
   Route::get('/assignment', 'LecturerController@assignment')->name('lecturer.assignment.index');
   Route::get('/assignment/create', 'LecturerController@assignment_create')->name('lecturer.assignment.create');
   Route::post('/assignment', 'LecturerController@assignment_store')->name('lecturer.assignment.store');
+  Route::get('/assignment/edit/{assignment_id}', 'LecturerController@assignment_edit')->name('lecturer.assignment.edit');
+  Route::post('/assignment/update', 'LecturerController@assignment_update')->name('lecturer.assignment.update');
   Route::get('/assignment/detail/{assignment_id?}', 'LecturerController@assignment_detail')->name('lecturer.assignment.detail');
+  Route::get('/assignment/student/{student_assignment_id}', 'LecturerController@assignment_student_get')->name('lecturer.assignment.student.get');
 
   // Kuis
   Route::get('/quiz', 'LecturerController@quiz')->name('lecturer.quiz.index');
@@ -83,7 +89,6 @@ Route::group(['prefix' => 'lecturer', 'middleware' => ['auth:lecturer']], functi
 
   // Live cha (POV: Lecturer)
   Route::get('/chats', 'LecturerController@chats')->name('lecturer.chats');
-
 });
 
 Route::get('/session', 'ExampleController@session');

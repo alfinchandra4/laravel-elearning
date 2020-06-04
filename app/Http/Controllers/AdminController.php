@@ -20,7 +20,7 @@ class AdminController extends Controller
     {
         $isExist = Student::where('nim', $request->nim)->orWhere('email', $request->email)->first();
         if ($isExist) {
-            toast('Student already registered', 'error');
+            toast('NIM already registered', 'error');
         } else {
             Student::create($request->all());
             toast('Student created!', 'success');

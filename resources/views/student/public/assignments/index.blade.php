@@ -46,7 +46,7 @@
                     $today    = date('Y-m-d H:i:s');
                 @endphp
                 @if ($today <= $deadline)
-                    <span class="badge badge-success">OPEN {{ $deadline }}</span>
+                    <span class="badge badge-success">OPEN {{ date('d/m/y H:i:s' ,strtotime($deadline)) }}</span>
                 @else
                     <span class="badge badge-danger">CLOSED {{ $deadline }}</span>
                 @endif
