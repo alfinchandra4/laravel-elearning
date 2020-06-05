@@ -299,6 +299,10 @@ class LecturerController extends Controller
         return back();
     }
 
+    public function quiz_delete($quiz_id) {
+        
+    }
+
     public function quiz_detail($quiz_id)
     {
         session()->put('quiz_id', $quiz_id);
@@ -311,7 +315,7 @@ class LecturerController extends Controller
     public function quiz_question_index($quiz_id)
     {
         $lecturer_id = lecturer()->id;
-        $questions = Question::where('quiz_id', $quiz_id)->where('lecturer_id', $lecturer_id)->get();
+        $questions = Question::where('quiz_id', $quiz_id)->get();
         return view('lecturer.quiz.questions', [
             'questions' => $questions
         ]);
@@ -332,9 +336,8 @@ class LecturerController extends Controller
         Question::create([
             'question' => $request->question,
             'quiz_id' => $quiz_id,
-            'lecturer_id' => $lecturer_id
         ]);
-        $lastQuestion = Question::where('lecturer_id', $lecturer_id)->latest()->first();
+        $lastQuestion = Question::where('quiz_id', $quiz_id)->latest()->first();
         $question_id = $lastQuestion->id;
         for ($i = 0; $i < $arrAnswersLength; $i++) {
             $ch = new Choices;
@@ -362,6 +365,7 @@ class LecturerController extends Controller
         return view('lecturer.quiz.students');
     }
 
+    // CHATS
     public function chats()
     {
         return view('lecturer.livechat.index');

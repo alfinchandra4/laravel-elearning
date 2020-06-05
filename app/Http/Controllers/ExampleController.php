@@ -57,4 +57,8 @@ class ExampleController extends Controller
     public function guard() {
         return student()->name;
     }
+
+    public function answer() { 
+        session()->forget('arrQuestionAnswers');
+    }
 }

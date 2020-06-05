@@ -17,27 +17,32 @@
 @endsection
 
 @section('content')
-    <a href="#" data-toggle="modal" data-target="#quizCreate">Tambah kuis</a>
-    <div class="card">
-      <div class="card-header bg-warning">
-        <div class="h5">Kuis</div>
-      </div>
-      <div class="card-body"> 
-        <div class="list-group">
-          @php
-              $quizzes = App\Quizzes::where('lecturer_id', lecturer()->id)
-                                    ->orderByDesc('created_at')
-                                    ->get();
-          @endphp
-          @foreach ($quizzes as $quiz)
-            <a href="{{ route('lecturer.quiz.detail', $quiz->id) }}" class="list-group-item list-group-item-action">
-              {{ $quiz->title }}
-              <div class="float-right"><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
-            </a>              
-          @endforeach
+<a href="#" data-toggle="modal" data-target="#quizCreate">Tambah kuis</a>
+<div class="card">
+  <div class="card-header bg-warning">
+    <div class="h5">Kuis</div>
+  </div>
+  <div class="card-body"> 
+      @php
+          $quizzes = App\Quizzes::where('lecturer_id', lecturer()->id)->orderByDesc('created_at')->get();
+      @endphp
+      @foreach ($quizzes as $quiz)
+        <div class="card">
+          <div class="card-body" style="padding: 8px">
+            <span class="text-muted">{{ $loop->iteration }}</span> &nbsp;
+              <a href="{{ route('lecturer.quiz.detail', $quiz->id) }}">
+                {{ Str::words($quiz->title, 20) }}
+              </a>
+              <div class="float-right">
+                <a href="{{ route('lecturer.quiz.delete', $quiz->id) }}"> 
+                  <i class="fa fa-lg fa-trash-o text-danger" aria-hidden="true"></i>
+                </a>
+              </div>
+          </div>
         </div>
-      </div>
-    </div>
+      @endforeach
+  </div>
+</div>
 @endsection
 
 @section('modal')

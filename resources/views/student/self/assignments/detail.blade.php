@@ -34,12 +34,13 @@
   @endif
 
   <div class="assignment">
-  <h5>Pengajar</h5>
-  <div class="font-weight-lighter mb-2">{{ $assignment->lecturer->name }}</div>
-  <h5>Judul</h5>
-  <div class="font-weight-lighter mb-2">{{ $assignment->title }}</div>
-  <h5>Deskripsi</h5>
-  <div class="font-weight-lighter">{!! $assignment->description !!}</div>
+  <div class="font-weight-lighter mb-2">Pengajar: {{ $assignment->lecturer->name }}</div>
+    <div class="card mb-2">
+      <div class="card-body">
+        <h4 class="card-title">{{ $assignment->title }}</h4>
+        <p class="card-text">{!! $assignment->description !!}</p>
+      </div>
+    </div>
   <h5>Kirim jawaban</h5> 
 
   @isset ($student_assignment_text) 

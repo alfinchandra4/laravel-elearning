@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Choices extends Migration
+class Studentchoices extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class Choices extends Migration
      */
     public function up()
     {
-        Schema::create('choices', function (Blueprint $table) {
+        Schema::create('student_choices', function (Blueprint $table) {
             $table->id();
-            $table->string('choice');
 
+            $table->foreignId('quiz_id')->constrained('quizzes')->onDelete('cascade');
             $table->foreignId('question_id')->constrained()->onDelete('cascade');
+            $table->foreignId('choice_id')->constrained()->cascadeOnDelete();
 
-            $table->char('correct');
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ class Choices extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('choices');
+        Schema::dropIfExists('student_answers');
     }
 }

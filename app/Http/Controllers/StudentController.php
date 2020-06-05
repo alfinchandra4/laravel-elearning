@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 use App\Lesson;
+use App\Choices;
+use App\Quizzes;
+use App\Question;
 use App\Assignment;
 use App\Lessonfiles;
 use App\Studentsenrolled;
 use App\Studentassignment;
 use App\Studentassignmenttext;
 use App\Studentassignmentfiles;
-use Illuminate\Support\Facades\Storage;
-
 
 class StudentController extends Controller
 {
@@ -80,7 +83,7 @@ class StudentController extends Controller
                         'text'                  => $request->answer_text
                     ]);
                     break;
-                    
+
                 case 2:
                     $format = 'files';
                     $docsformat = ['doc', 'docx', 'pdf'];
@@ -149,7 +152,63 @@ class StudentController extends Controller
             return back();
         }
     }
-    // Problem: Return with after created, page no need to set insert data. only view data {preview}
+
+    // Quiz
+    public function public_quizzes()
+    {
+        return view('student.public.quiz.index');
+    }
+
+    public function public_quizzes_detail($quiz_id)
+    {
+        $quiz = Quizzes::find($quiz_id);
+        $questions = Question::where('quiz_id', $quiz_id)->get();
+        return view('student.public.quiz.detail', [
+            'quiz' => $quiz,
+            'questions' => $questions
+        ]);
+    }
+
+    public function public_quiz_answer(Request $request)
+    {
+        $count_student_questions = count($request->q);
+        $quiz_id   = $request->quiz_id;
+        $count_all_questions  = Question::where('quiz_id', $quiz_id)->count();
+        if ($count_student_questions < $count_all_questions) {
+            toast('Error, questions answer must be filled', 'success');
+            return back();
+        }
+        $arrQuestionAnswers = [];
+        foreach ($request->q as $key => $value) {
+            $choices = Choices::where('question_id', $key)->where('correct', 1)->first();
+            $arrQuestionAnswers[] =
+                [
+                    'question_id' => $key,
+                    'correct_id' => $choices->id,
+                    'answer_id'  => (int) $value
+                ];
+        }
+        // dd($arrQuestionAnswers);
+        // $activeArrQuestionsAnswersKeys = array_keys($questions);
+        // $noSelectedQuestions = Question::where('quiz_id', $quiz_id)->whereNotIn('id', $activeArrQuestionsAnswersKeys)->get();
+        // foreach ($noSelectedQuestions as $value) {
+        //     $choices = Choices::where('question_id', $value['id'])->where('correct', 1)->first();
+        //     $arrNoSelectedQuestions[$value['id']] = 
+        //     [
+        //         'correct' => $choices->id,
+        //         'answer'  => NULL
+        //     ];
+        // }
+        // $arrMerger = array_merge($arrQuestionAnswers, $arrNoSelectedQuestions);
+        // dd($arrQuestionAnswers, $arrNoSelectedQuestions, $arrMerger);
+        // $this->mergerArray($arrQuestionAnswers, $arrNoSelectedQuestions);
+
+        session()->put('arrQuestionAnswers', $arrQuestionAnswers);
+        // dd($arrQuestionAnswers);
+        toast('Completed', 'success');
+        return redirect()->route('student.self.quizzes.detail', $quiz_id);
+    }
+
 
 
     // SELF
@@ -185,7 +244,7 @@ class StudentController extends Controller
         $student_assignment_files = Studentassignmentfiles::where('assignment_id', $assignment_id)
             ->where('student_assignment_id', $student_assignment->id)
             ->where('student_id', student()->id)->get();
-            
+
         return view('student.self.assignments.detail', [
             'assignment' => $assignment,
             'student_assignment_text' => $student_assignment_text !== null ? $student_assignment_text : NULL,
@@ -251,5 +310,16 @@ class StudentController extends Controller
             }
         }
         return back();
+    }
+
+    // QUIZ
+    public function self_quizzes_detail($quiz_id)
+    {
+        $quiz = Quizzes::find($quiz_id);
+        $questions = Question::where('quiz_id', $quiz_id)->get();
+        return view('student.self.quiz.detail', [
+            'quiz' => $quiz,
+            'questions' => $questions
+        ]);
     }
 }

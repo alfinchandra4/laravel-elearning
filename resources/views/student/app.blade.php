@@ -54,6 +54,7 @@
         $route     = Route::currentRouteName();
         $arrMateri = ['student.public.lessons'];
         $arrAssignments = ['student.public.assignments', 'student.public.assignment.detail'];
+        $arrQuiz = ['student.public.quizzes']
     @endphp
     <ul class="navbar-nav mr-auto">
       <li class="nav-item {{ in_array($route, $arrMateri) ? 'active' : '' }}">
@@ -62,8 +63,8 @@
       <li class="nav-item {{ in_array($route, $arrAssignments) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route($arrAssignments[0]) }}">Assignment</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href=""">Kuis</a>
+      <li class="nav-item {{ in_array($route, $arrQuiz) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route($arrQuiz[0]) }}">Kuis</a>
       </li>
     </ul>
     <span class="navbar-text">

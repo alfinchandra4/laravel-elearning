@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Admin;
 use App\Lecturer;
+use App\Student;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,5 +18,6 @@ class DatabaseSeeder extends Seeder
         factory(Lecturer::class)->create();
         $this->call(Faculty::class);
         $this->call(Major::class);
+        factory(Student::class)->create();
     }
 }

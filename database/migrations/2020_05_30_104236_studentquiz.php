@@ -16,11 +16,14 @@ class Studentquiz extends Migration
         Schema::create('student_quizzes', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('student_id');
-            $table->foreign('student_id')->references('id')->on('students');
+            $table->foreignId('student_id')
+                  ->constrained()
+                  ->onDelete('cascade');
 
-            $table->unsignedBigInteger('quiz_id');
-            $table->foreign('quiz_id')->references('id')->on('quizzes');
+            $table->foreignId('quiz_id')
+                  ->constrained('quizzes')
+                  ->onDelete('cascade');
+
             $table->char('score');
             $table->timestamps();
         });

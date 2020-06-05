@@ -24,20 +24,23 @@
       $today    = date('Y-m-d H:i:s');
   @endphp
   @if ($today <= $deadline)
-    <h5 class="badge btn-success" style="font-size: 12pt">
+    <h5 class="badge btn-success" style="font-size: 10pt">
       OPEN ᛫ {{ date('d/m/y H:i:s' ,strtotime($deadline)) }}</> 
     </h5>
   @else
-    <h5 class="badge btn-danger" style="font-size: 12pt">
+    <h5 class="badge btn-danger" style="font-size: 10pt">
       CLOSED ᛫ {{ date('d/m/y H:i:s' ,strtotime($deadline)) }}</> 
     </h5>
   @endif
 
   <div class="assignment">
-  <h5>Judul</h5>
-  <div class="font-weight-lighter mb-2">{{ $assignment->title }}</div>
-  <h5>Deskripsi</h5>
-  <div class="font-weight-lighter">{!! $assignment->description !!}</div>
+  <div class="font-weight-lighter mb-2">Pengajar: {{ $assignment->lecturer->name }}</div>
+    <div class="card mb-2">
+      <div class="card-body">
+        <h4 class="card-title">{{ $assignment->title }}</h4>
+        <p class="card-text">{!! $assignment->description !!}</p>
+      </div>
+    </div>
   <h5>Kirim jawaban</h5>
   <div class="form-group">
     <select name="model" id="model" class="form-control col-md-4 mb-2" {{ date('Y-m-d H:i:s') <= date('Y-m-d H:i:s', strtotime($assignment->deadline)) ? '' : 'disabled' }}>

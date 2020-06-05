@@ -51,6 +51,12 @@ Route::group(['prefix' => 'student', 'middleware' => ['auth:student']], function
   Route::post('/myassignment/update/text', 'StudentController@self_assignment_update_text')->name('student.self.assignment.update.text');
   Route::post('/myassignment/update/files', 'StudentController@self_assignment_update_files')->name('student.self.assignment.update.files');
   Route::get('/myassignment/files/delete/{student_assignment_file_id}', 'StudentController@self_assignment_delete_file')->name('student.assignment.files.delete');
+
+  // Quiz
+  Route::get('/quiz', 'StudentController@public_quizzes')->name('student.public.quizzes');
+  Route::get('/quiz/begin/{quiz_id}', 'StudentController@public_quizzes_detail')->name('student.public.quizzes.detail');
+  Route::post('/quiz', 'StudentController@public_quiz_answer')->name('student.public.quizzes.answer');
+  Route::get('/quiz/detail/{quiz_id}', 'StudentController@self_quizzes_detail')->name('student.self.quizzes.detail');
 });
 
 Route::group(['prefix' => 'lecturer', 'middleware' => ['auth:lecturer']], function () {
@@ -79,6 +85,7 @@ Route::group(['prefix' => 'lecturer', 'middleware' => ['auth:lecturer']], functi
   Route::get('/quiz/create', 'LecturerController@quiz_create')->name('lecturer.quiz.create');
   Route::post('/quiz', 'LecturerController@quiz_store')->name('lecturer.quiz.store');
   Route::post('/quiz/update', 'LecturerController@quiz_update')->name('lecturer.quiz.update');
+  Route::get('/quiz/delete/{quiz_id}', 'LecturerController@quiz_delete')->name('lecturer.quiz.delete');
   Route::get('/quiz/detail/{quiz_id}', 'LecturerController@quiz_detail')->name('lecturer.quiz.detail');
 
   Route::get('/quiz/question/{quiz_id}', 'LecturerController@quiz_question_index')->name('lecturer.quiz.question');
@@ -97,3 +104,4 @@ Route::get('/getmajor/{faculty_id}', 'ExampleController@getmajor');
 Route::get('/getstudent/{student_id}', 'ExampleController@getstudent');
 Route::get('/getlecturer/{lecturer_id}', 'ExampleController@getlecturer');
 Route::get('/guard', 'ExampleController@guard');
+Route::get('/answer', 'ExampleController@answer');

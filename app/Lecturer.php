@@ -37,6 +37,10 @@ class Lecturer extends Authenticatable
     }
 
     public function assignment() {
-        return $this->hasMany(Lecturer::class, 'lecturer_id', 'id');
+        return $this->hasMany(Assignment::class, 'lecturer_id', 'id');
+    }
+
+    public function quiz() {
+        return $this->hasMany(Quizzes::class, 'lecturer_id', 'id');
     }
 }
