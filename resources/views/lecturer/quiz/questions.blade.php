@@ -28,6 +28,7 @@
                 <input type="text" name="question" id="question" class="form-control" placeholder="pertanyaan">
               </div>
               <div>
+                <div class="mb-2">Jawaban benar</div>
                 @for ($i = 0; $i < 5; $i++)
                   <div class="input-group mb-1">
                     <div class="input-group-prepend">
@@ -44,8 +45,13 @@
               </div>
             </form>
           </div>
+          <div class="card-footer">
+          <a href="#" class="btn btn-block btn-secondary" onclick="return confirm('Warning, after publish. Questions cannot be remove!')">Publish</a>
+          </div>
         </div>
       </div>
+
+
       <div class="col-md-6">
         <h4 class="font-weight-bold">Pilihan ganda</h4>
         @foreach ($questions as $question)

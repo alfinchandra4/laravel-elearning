@@ -17,8 +17,8 @@ class Quiz extends Migration
             $table->id();
             $table->char('title');
             $table->text('description');
-            $table->unsignedBigInteger('lecturer_id');
-            $table->foreign('lecturer_id')->references('id')->on('lecturers'); 
+            $table->foreignId('lecturer_id')->constrained();
+            $table->char('is_active');
             $table->timestamps();
         });
     }

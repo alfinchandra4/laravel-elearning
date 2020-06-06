@@ -56,7 +56,8 @@ Route::group(['prefix' => 'student', 'middleware' => ['auth:student']], function
   Route::get('/quiz', 'StudentController@public_quizzes')->name('student.public.quizzes');
   Route::get('/quiz/begin/{quiz_id}', 'StudentController@public_quizzes_detail')->name('student.public.quizzes.detail');
   Route::post('/quiz', 'StudentController@public_quiz_answer')->name('student.public.quizzes.answer');
-  Route::get('/quiz/detail/{quiz_id}', 'StudentController@self_quizzes_detail')->name('student.self.quizzes.detail');
+  Route::get('/myquiz', 'StudentController@self_quizzes')->name('student.self.quizzes');
+  Route::get('/myquiz/detail/{quiz_id}', 'StudentController@self_quizzes_detail')->name('student.self.quizzes.detail');
 });
 
 Route::group(['prefix' => 'lecturer', 'middleware' => ['auth:lecturer']], function () {
@@ -91,10 +92,10 @@ Route::group(['prefix' => 'lecturer', 'middleware' => ['auth:lecturer']], functi
   Route::get('/quiz/question/{quiz_id}', 'LecturerController@quiz_question_index')->name('lecturer.quiz.question');
   Route::post('/quiz/question', 'LecturerController@quiz_question_store')->name('lecturer.quiz.question.store');
   Route::get('/quiz/question/delete/{question_id}', 'LecturerController@quiz_question_delete')->name('lecturer.quiz.question.delete');
-
   Route::get('/quiz/students/{quiz_id}', 'LecturerController@quiz_students')->name('lecturer.quiz.student');
+  Route::get('/quiz/students/{quiz_id}/{student_id}/student-quiz-selected', 'LecturerController@quiz_student_selected')->name('lecturer.quiz.student.selected');
 
-  // Live cha (POV: Lecturer)
+  // Live chat (POV: Lecturer)
   Route::get('/chats', 'LecturerController@chats')->name('lecturer.chats');
 });
 

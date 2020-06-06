@@ -11,10 +11,12 @@ use App\Quizzes;
 use App\Question;
 use App\Assignment;
 use App\Lessonfiles;
+use App\Studentchoices;
 use App\Studentsenrolled;
 use App\Studentassignment;
 use App\Studentassignmenttext;
 use App\Studentassignmentfiles;
+use App\Studentquiz as Studentquizzes;
 
 class StudentController extends Controller
 {
@@ -179,32 +181,38 @@ class StudentController extends Controller
             return back();
         }
         $arrQuestionAnswers = [];
+        $score = 0;
         foreach ($request->q as $key => $value) {
             $choices = Choices::where('question_id', $key)->where('correct', 1)->first();
-            $arrQuestionAnswers[] =
-                [
-                    'question_id' => $key,
-                    'correct_id' => $choices->id,
-                    'answer_id'  => (int) $value
-                ];
-        }
-        // dd($arrQuestionAnswers);
-        // $activeArrQuestionsAnswersKeys = array_keys($questions);
-        // $noSelectedQuestions = Question::where('quiz_id', $quiz_id)->whereNotIn('id', $activeArrQuestionsAnswersKeys)->get();
-        // foreach ($noSelectedQuestions as $value) {
-        //     $choices = Choices::where('question_id', $value['id'])->where('correct', 1)->first();
-        //     $arrNoSelectedQuestions[$value['id']] = 
-        //     [
-        //         'correct' => $choices->id,
-        //         'answer'  => NULL
-        //     ];
-        // }
-        // $arrMerger = array_merge($arrQuestionAnswers, $arrNoSelectedQuestions);
-        // dd($arrQuestionAnswers, $arrNoSelectedQuestions, $arrMerger);
-        // $this->mergerArray($arrQuestionAnswers, $arrNoSelectedQuestions);
 
+            $arrQuestionAnswers[] = [ 
+                'question_id' => $key, 
+                'correct_id' => $choices->id, 
+                'answer_id'  => (int) $value 
+            ];
+
+            Studentchoices::create([
+                'quiz_id' => $quiz_id,
+                'question_id' => $key,
+                'choice_id' => (int) $value,
+                'student_id' => student()->id
+            ]);
+
+            $question = Question::find($key);
+                foreach ($question->choices as $choice) {
+                    if (($choice->id == $choices->id) && 
+                        ($choice->id == (int) $value)) {
+                        $score++;     
+                    }
+                }
+        }
+        $final = $score .' Of '. $count_all_questions;
+        Studentquizzes::create([
+            'student_id' => student()->id,
+            'quiz_id'    => $quiz_id,
+            'score'      => $final
+        ]);
         session()->put('arrQuestionAnswers', $arrQuestionAnswers);
-        // dd($arrQuestionAnswers);
         toast('Completed', 'success');
         return redirect()->route('student.self.quizzes.detail', $quiz_id);
     }
@@ -317,9 +325,14 @@ class StudentController extends Controller
     {
         $quiz = Quizzes::find($quiz_id);
         $questions = Question::where('quiz_id', $quiz_id)->get();
+        $count_question = $questions->count();
         return view('student.self.quiz.detail', [
             'quiz' => $quiz,
             'questions' => $questions
         ]);
+    }
+
+    public function self_quizzes() {
+        return view('student.self.quiz.index');
     }
 }

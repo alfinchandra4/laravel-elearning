@@ -7,14 +7,14 @@ use Faker\Generator as Faker;
 
 $factory->define(Student::class, function (Faker $faker) {
     return [
-        'nim'  => 1510512005,
+        'nim'  => Str::random(10),
         'name' => $faker->name,
         'faculty_id' => 5,
         'major_id'   => 17,
         'born' => 'Bireun',
         'birth' => '2020-06-04',
-        'email' =>  'alfin@student.com', // $faker->unique()->safeEmail,
-        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+        'email' =>  $faker->safeEmail, // $faker->unique()->safeEmail,
+        'password' => bcrypt('password'), // password
         'remember_token' => Str::random(10),
     ];
 });

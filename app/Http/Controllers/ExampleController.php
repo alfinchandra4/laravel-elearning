@@ -60,5 +60,7 @@ class ExampleController extends Controller
 
     public function answer() { 
         session()->forget('arrQuestionAnswers');
+        session()->forget('student');
+        session()->forget('student_choices');
     }
 }

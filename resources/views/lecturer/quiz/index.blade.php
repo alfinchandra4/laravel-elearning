@@ -27,7 +27,7 @@
           $quizzes = App\Quizzes::where('lecturer_id', lecturer()->id)->orderByDesc('created_at')->get();
       @endphp
       @foreach ($quizzes as $quiz)
-        <div class="card">
+        <div class="card mb-1">
           <div class="card-body" style="padding: 8px">
             <span class="text-muted">{{ $loop->iteration }}</span> &nbsp;
               <a href="{{ route('lecturer.quiz.detail', $quiz->id) }}">

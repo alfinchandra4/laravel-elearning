@@ -27,7 +27,11 @@
       </thead>
       <tbody>
         @php
-            $quizzes = App\Quizzes::orderByDesc('created_at')->get();
+            $quizzes = App\Quizzes::whereNotIn('id', function($q) {
+              $q->select('quiz_id')
+                ->from('student_quizzes')
+                ->where('student_id', student()->id);
+            })->orderByDesc('created_at')->get();
         @endphp
         @foreach ($quizzes as $quiz)
             <tr>

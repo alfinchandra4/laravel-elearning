@@ -18,6 +18,6 @@ class DatabaseSeeder extends Seeder
         factory(Lecturer::class)->create();
         $this->call(Faculty::class);
         $this->call(Major::class);
-        factory(Student::class)->create();
+        factory(Student::class, 2)->create();
     }
 }

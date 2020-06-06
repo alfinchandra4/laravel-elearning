@@ -13,9 +13,12 @@ use App\Assignment;
 use App\Quizzes;
 use App\Question;
 use App\Choices;
+use App\Student;
 use App\Studentassignment;
 use App\Studentassignmentfiles;
 use App\Studentassignmenttext;
+use App\Studentchoices;
+use App\Studentquiz;
 
 class LecturerController extends Controller
 {
@@ -282,7 +285,8 @@ class LecturerController extends Controller
         Quizzes::create([
             'title' => $request->title,
             'description' => $request->description,
-            'lecturer_id' => $lecturer_id
+            'lecturer_id' => $lecturer_id,
+            'is_active'   => 0
         ]);
         toast('Quiz created', 'success');
         return back();
@@ -362,7 +366,23 @@ class LecturerController extends Controller
 
     public function quiz_students($quiz_id)
     {
-        return view('lecturer.quiz.students');
+        return view('lecturer.quiz.students', [
+            'quiz_id' => $quiz_id
+        ]);
+    }
+
+    public function quiz_student_selected($quiz_id, $student_id) {
+        $student_choices = Studentchoices::where('quiz_id', $quiz_id)->where('student_id', $student_id)->get();
+        $student = Student::find($student_id);
+        $student_quiz = Studentquiz::where('quiz_id', $quiz_id)->where('student_id', $student_id)->first();
+        session()->put('student_choices', $student_choices);
+        $student = [
+            'id'    => $student->id,
+            'name'  => $student->name,
+            'score' => $student_quiz->score
+        ];
+        session()->put('student', $student);
+        return back();
     }
 
     // CHATS

@@ -54,7 +54,7 @@
         $route     = Route::currentRouteName();
         $arrMateri = ['student.public.lessons'];
         $arrAssignments = ['student.public.assignments', 'student.public.assignment.detail'];
-        $arrQuiz = ['student.public.quizzes']
+        $arrQuiz = ['student.public.quizzes', 'student.public.quizzes.detail'];
     @endphp
     <ul class="navbar-nav mr-auto">
       <li class="nav-item {{ in_array($route, $arrMateri) ? 'active' : '' }}">
@@ -75,7 +75,7 @@
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item text-dark" href="{{ route('student.self.lesson.enrolled') }}">Materi</a>
           <a class="dropdown-item text-dark" href="{{ route('student.self.assignments') }}">Assignments</a>
-          <a class="dropdown-item text-dark" href="#">Kuis</a>
+          <a class="dropdown-item text-dark" href="{{ route('student.self.quizzes') }}">Kuis</a>
           <a class="dropdown-item text-dark" href="#">Pesan</a>
           <a class="dropdown-item text-dark" href="#">Profile</a>
           <div class="dropdown-divider"></div>

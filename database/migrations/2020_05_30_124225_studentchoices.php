@@ -16,9 +16,10 @@ class Studentchoices extends Migration
         Schema::create('student_choices', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('quiz_id')->constrained('quizzes')->onDelete('cascade');
-            $table->foreignId('question_id')->constrained()->onDelete('cascade');
+            $table->foreignId('quiz_id')->constrained('quizzes')->cascadeOnDelete();
+            $table->foreignId('question_id')->constrained()->cascadeOnDelete();
             $table->foreignId('choice_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('student_id')->constrained()->cascadeOnDelete();
 
             $table->timestamps();
         });

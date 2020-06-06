@@ -36,6 +36,10 @@ class Student extends Authenticatable
 
     public function student_assignment()
     {
-        return $this->hasMany(Studentassignment::class, 'assignment_id', 'id');
+        return $this->hasMany(Studentassignment::class, 'student_id', 'id');
+    }
+
+    public function student_quiz() {
+        return $this->hasMany(Studentquiz::class, 'student_id', 'id');
     }
 }
