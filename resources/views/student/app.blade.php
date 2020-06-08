@@ -55,6 +55,7 @@
         $arrMateri = ['student.public.lessons'];
         $arrAssignments = ['student.public.assignments', 'student.public.assignment.detail'];
         $arrQuiz = ['student.public.quizzes', 'student.public.quizzes.detail'];
+        $arrChats = [];
     @endphp
     <ul class="navbar-nav mr-auto">
       <li class="nav-item {{ in_array($route, $arrMateri) ? 'active' : '' }}">
@@ -66,6 +67,9 @@
       <li class="nav-item {{ in_array($route, $arrQuiz) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route($arrQuiz[0]) }}">Kuis</a>
       </li>
+      {{-- <li class="nav-item {{ in_array($route, $arrChats) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route($arrChats[0]) }}">Pesan</a>
+      </li> --}}
     </ul>
     <span class="navbar-text">
        <li class="nav-item dropdown" style="list-style: none">
@@ -76,7 +80,7 @@
           <a class="dropdown-item text-dark" href="{{ route('student.self.lesson.enrolled') }}">Materi</a>
           <a class="dropdown-item text-dark" href="{{ route('student.self.assignments') }}">Assignments</a>
           <a class="dropdown-item text-dark" href="{{ route('student.self.quizzes') }}">Kuis</a>
-          <a class="dropdown-item text-dark" href="#">Pesan</a>
+          <a class="dropdown-item text-dark" href="{{ route('student.self.chats') }}">Pesan</a>
           <a class="dropdown-item text-dark" href="#">Profile</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item text-dark" href="/logout">Logout</a>
@@ -114,6 +118,9 @@
 
     <!-- Custom JS -->
     @yield('js')
+
+    {{-- Modal --}}
+    @yield('modal')
 
 </body>
 </html>

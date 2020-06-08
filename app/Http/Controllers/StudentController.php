@@ -5,11 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+use App\Chatsroom;
+use App\Userchat;
+
+use DB;
 use App\Lesson;
 use App\Choices;
 use App\Quizzes;
 use App\Question;
 use App\Assignment;
+use App\Lecturer;
 use App\Lessonfiles;
 use App\Studentchoices;
 use App\Studentsenrolled;
@@ -185,10 +190,10 @@ class StudentController extends Controller
         foreach ($request->q as $key => $value) {
             $choices = Choices::where('question_id', $key)->where('correct', 1)->first();
 
-            $arrQuestionAnswers[] = [ 
-                'question_id' => $key, 
-                'correct_id' => $choices->id, 
-                'answer_id'  => (int) $value 
+            $arrQuestionAnswers[] = [
+                'question_id' => $key,
+                'correct_id' => $choices->id,
+                'answer_id'  => (int) $value
             ];
 
             Studentchoices::create([
@@ -199,14 +204,15 @@ class StudentController extends Controller
             ]);
 
             $question = Question::find($key);
-                foreach ($question->choices as $choice) {
-                    if (($choice->id == $choices->id) && 
-                        ($choice->id == (int) $value)) {
-                        $score++;     
-                    }
+            foreach ($question->choices as $choice) {
+                if (($choice->id == $choices->id) &&
+                    ($choice->id == (int) $value)
+                ) {
+                    $score++;
                 }
+            }
         }
-        $final = $score .' Of '. $count_all_questions;
+        $final = $score . ' Of ' . $count_all_questions;
         Studentquizzes::create([
             'student_id' => student()->id,
             'quiz_id'    => $quiz_id,
@@ -332,7 +338,69 @@ class StudentController extends Controller
         ]);
     }
 
-    public function self_quizzes() {
+    public function self_quizzes()
+    {
         return view('student.self.quiz.index');
+    }
+
+    // Chats
+    public function self_chats()
+    {
+        return view('student.self.chats.index');
+    }
+
+    public function self_chat_search_lecturer()
+    {
+        return view('student.self.chats.search');
+    }
+
+    public function self_chat_search_lecturer_process(Request $request)
+    {
+        $lecturers = Lecturer::where('name', 'LIKE', '%' . $request->lecturer . '%')->get();
+        session()->put('lecturers', $lecturers);
+        $request->flash();
+        return back();
+    }
+
+    public function self_chat_addnew_lecturer($lecturer_id)
+    {
+        $chatroom = Chatsroom::where('student_id', student()->id)->where('lecturer_id', $lecturer_id)->first();
+        if (empty($chatroom)) {
+            $chatroom = Chatsroom::create([
+                'lecturer_id' => $lecturer_id,
+                'student_id'  => student()->id
+            ]);
+            return
+                redirect()->action('StudentController@self_chats');
+        }
+        return
+            redirect()->action('StudentController@self_chats');
+    }
+
+    public function self_chat_selectedchat($lecturer_id)
+    {
+        $chatroom = Chatsroom::where('student_id', student()->id)->where('lecturer_id', $lecturer_id)->first();
+        if (!empty($chatroom)) {
+            $chatroomid = $chatroom->id;
+            $user_chats = Userchat::where('chatroom_id', $chatroomid)->get();
+            session()->put('user_chats', $user_chats);
+            session()->put('lecturerid', $lecturer_id);
+            session()->put('chatroomid', $chatroom->id);
+            return back();
+        }
+    }
+
+    public function self_chat_sendmsg(Request $request) {
+        Userchat::create([
+            'level' => 'student',
+            'userid' => student()->id,
+            'name' => student()->name,
+            'message' => $request->message,
+            'chatroom_id' => $request->chatroomid
+        ]);
+        return redirect()->action(
+            'StudentController@self_chat_selectedchat',
+            ['lecturer_id' => $request->lecturerid]
+        );
     }
 }

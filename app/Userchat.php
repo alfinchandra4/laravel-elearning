@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Chats extends Model
+class Userchat extends Model
 {
-    protected $table = 'chats';
+    protected $table = 'user_chats';
     protected $primaryKey = 'id';
     protected $guarded = [];
 }

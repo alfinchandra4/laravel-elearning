@@ -58,6 +58,14 @@ Route::group(['prefix' => 'student', 'middleware' => ['auth:student']], function
   Route::post('/quiz', 'StudentController@public_quiz_answer')->name('student.public.quizzes.answer');
   Route::get('/myquiz', 'StudentController@self_quizzes')->name('student.self.quizzes');
   Route::get('/myquiz/detail/{quiz_id}', 'StudentController@self_quizzes_detail')->name('student.self.quizzes.detail');
+
+  Route::get('/mychats', 'StudentController@self_chats')->name('student.self.chats');
+  Route::get('/mychat/search-lecturer', 'StudentController@self_chat_search_lecturer')->name('student.self.chat.search.lecturer');
+  Route::post('/mychat/search-lecturer', 'StudentController@self_chat_search_lecturer_process')->name('student.self.chat.search.process');
+  Route::get('/mychat/search-lecturer/add/{lecturer_id}', 'StudentController@self_chat_addnew_lecturer')->name('sudent.self.chat.addnew.lecturer');
+  Route::get('/mychat/selected-chat/{lecturer_id}', 'StudentController@self_chat_selectedchat')->name('student.self.chat.selected.lecturer');
+  Route::post('/sendmsg', 'StudentController@self_chat_sendmsg')->name('student.self.chat.sendmsg');
+
 });
 
 Route::group(['prefix' => 'lecturer', 'middleware' => ['auth:lecturer']], function () {
@@ -94,6 +102,7 @@ Route::group(['prefix' => 'lecturer', 'middleware' => ['auth:lecturer']], functi
   Route::get('/quiz/question/delete/{question_id}', 'LecturerController@quiz_question_delete')->name('lecturer.quiz.question.delete');
   Route::get('/quiz/students/{quiz_id}', 'LecturerController@quiz_students')->name('lecturer.quiz.student');
   Route::get('/quiz/students/{quiz_id}/{student_id}/student-quiz-selected', 'LecturerController@quiz_student_selected')->name('lecturer.quiz.student.selected');
+  Route::post('/quiz/publish', 'LecturerController@quiz_published')->name('lecturer.quiz.publish');
 
   // Live chat (POV: Lecturer)
   Route::get('/chats', 'LecturerController@chats')->name('lecturer.chats');

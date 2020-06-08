@@ -42,4 +42,8 @@ class Student extends Authenticatable
     public function student_quiz() {
         return $this->hasMany(Studentquiz::class, 'student_id', 'id');
     }
+
+    public function chat_room() {
+        return $this->hasMany(Chatsroom::class, 'student_id', 'id');
+    }
 }

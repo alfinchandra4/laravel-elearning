@@ -43,4 +43,8 @@ class Lecturer extends Authenticatable
     public function quiz() {
         return $this->hasMany(Quizzes::class, 'lecturer_id', 'id');
     }
+
+    public function chat_room() {
+        return $this->hasMany(Chatroom::class, 'lecturer_id', 'id');
+    }
 }

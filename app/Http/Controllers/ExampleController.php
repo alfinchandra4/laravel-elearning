@@ -54,13 +54,17 @@ class ExampleController extends Controller
         ]);
     }
 
-    public function guard() {
+    public function guard()
+    {
         return student()->name;
     }
 
-    public function answer() { 
+    public function answer()
+    {
         session()->forget('arrQuestionAnswers');
         session()->forget('student');
         session()->forget('student_choices');
+        session()->forget('lecturers');
+        session()->forget('user_chats');
     }
 }

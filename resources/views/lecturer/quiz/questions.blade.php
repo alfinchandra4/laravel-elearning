@@ -13,7 +13,7 @@
       }
   </style>
 @endsection
-
+{{-- Set Quiz Published or not --}}
 @section('content')
 @include('lecturer.quiz.navtabs')
     <div class="row ans-qw">
@@ -46,7 +46,11 @@
             </form>
           </div>
           <div class="card-footer">
-          <a href="#" class="btn btn-block btn-secondary" onclick="return confirm('Warning, after publish. Questions cannot be remove!')">Publish</a>
+            <form action="{{ route('lecturer.quiz.publish') }}" method="post">
+              @csrf
+              <input type="hidden" name="quiz_id" value="{{$quiz->id}}">
+              <button type="submit" class="btn btn-secondary btn-block" {{ $quiz->is_active == 1 ? 'disabled' : '' }}>Publish</button>
+            </form>
           </div>
         </div>
       </div>
@@ -70,7 +74,9 @@
                   </ol>
               </div>
             </div>
+            @if ($quiz->is_active == 0)
               <a href="{{ route('lecturer.quiz.question.delete', $question->id) }}" class="text-white btn btn-danger btn-block btn-sm" style="border-radius:0px"> Hapus</a>
+            @endif
           </div>                
         @endforeach
       </div>

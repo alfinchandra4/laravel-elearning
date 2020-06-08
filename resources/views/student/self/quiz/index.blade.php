@@ -31,7 +31,7 @@
               $q->select('quiz_id')
                 ->from('student_quizzes')
                 ->where('student_id', student()->id);
-            })->orderByDesc('created_at')->get();
+            })->where('is_active', 1)->orderByDesc('created_at')->get();
         @endphp
         @foreach ($quizzes as $quiz)
             <tr>

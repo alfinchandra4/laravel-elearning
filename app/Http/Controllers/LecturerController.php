@@ -320,8 +320,10 @@ class LecturerController extends Controller
     {
         $lecturer_id = lecturer()->id;
         $questions = Question::where('quiz_id', $quiz_id)->get();
+        $quiz = Quizzes::find($quiz_id);
         return view('lecturer.quiz.questions', [
-            'questions' => $questions
+            'questions' => $questions,
+            'quiz'   => $quiz
         ]);
     }
 
@@ -355,6 +357,12 @@ class LecturerController extends Controller
             $ch->save();
         }
         toast('Question created', 'success');
+        return back();
+    }
+
+    public function quiz_published(Request $request) {
+        Quizzes::find($request->quiz_id)->increment('is_active');
+        toast('Quiz activated', 'success');
         return back();
     }
 
