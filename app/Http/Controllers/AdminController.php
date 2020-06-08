@@ -46,21 +46,21 @@ class AdminController extends Controller
     public function student_update(Request $request)
     {
         $checkStudentAccount = Student::where('email', $request->email)->first();
-        if ($request->faculty_id == 0 || $request->major_id == 0 || $checkStudentAccount !== null) {
+        if (
+            empty($request->faculty_id) ||
+            empty($request->major_id) ||
+            empty($checkStudentAccount)
+        ) {
             toast('Invalid update, check your input', 'error');
             return back();
         }
-        $std = Student::find($request->studentid);
-        $std->name = $request->name;
-        $std->faculty_id = $request->faculty_id;
-        $std->major_id = $request->major_id;
-        $std->born = $request->born;
-        $std->birth = $request->birth;
-        $std->email = $request->email;
-        if ($request->password != null) {
-            $std->password = bcrypt($request->password);
-        }
-        $std->save();
+
+        $student = Student::findOrFail($request->studentid);
+        $request->password == null ?
+            $input = $request->except(['password', 'studentid']) :
+            $input = $request->except('studentid');
+        $student->fill($input)->save();
+
         toast('Student updated successfully', 'success');
         return back();
     }
@@ -95,12 +95,12 @@ class AdminController extends Controller
                 return back();
             }
         }
-        $lct = Lecturer::find($request->lecturerid);
-        $lct->name = $request->name;
-        $lct->email = $request->email;
-        if ($request->password !== null) {
-            $lct->password = bcrypt($request->password);
-        }
+        $lct = Lecturer::findOrFail($request->lecturerid);
+        $request->password == null ?
+            $input = $request->only(['name', 'email']) :
+            $input = $request->only(['name', 'email', 'password']);
+        $lct->fill($input)->save();
+
         toast('Lecturer update successfully', 'success');
         $lct->save();
         return back();

@@ -16,6 +16,7 @@ use App\Question;
 use App\Assignment;
 use App\Lecturer;
 use App\Lessonfiles;
+use App\Student;
 use App\Studentchoices;
 use App\Studentsenrolled;
 use App\Studentassignment;
@@ -386,11 +387,12 @@ class StudentController extends Controller
             session()->put('user_chats', $user_chats);
             session()->put('lecturerid', $lecturer_id);
             session()->put('chatroomid', $chatroom->id);
-            return back();
+            return redirect()->route('student.self.chats');
         }
     }
 
-    public function self_chat_sendmsg(Request $request) {
+    public function self_chat_sendmsg(Request $request)
+    {
         Userchat::create([
             'level' => 'student',
             'userid' => student()->id,
@@ -402,5 +404,14 @@ class StudentController extends Controller
             'StudentController@self_chat_selectedchat',
             ['lecturer_id' => $request->lecturerid]
         );
+    }
+
+    // Profile
+    public function setpassword(Request $request) {
+        $student = Student::findOrFail(student()->id);
+        $input = $request->only('password');
+        $student->fill($input)->save();
+        toast('Password changed', 'success');
+        return back();
     }
 }

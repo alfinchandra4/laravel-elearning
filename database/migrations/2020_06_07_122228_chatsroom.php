@@ -15,8 +15,8 @@ class Chatsroom extends Migration
     {
         Schema::create('chats_room', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('lecturer_id')->constrained();
-            $table->foreignId('student_id')->constrained();
+            $table->foreignId('lecturer_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('student_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

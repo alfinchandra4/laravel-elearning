@@ -70,7 +70,9 @@
       </div>
     </div>
     <div class="users-chat">
-      <div class="list-header bg-warning p-2 font-weight-bold" style="height: 40px"></div>
+      <div class="list-header bg-warning p-2 font-weight-bold" style="height: 40px">
+      {{ App\Lecturer::find(session('lecturerid'))->name }}
+    </div>
       <div class="chats">
         @if (session()->has('user_chats'))
           <ul class="list-group list-group-flush chats-body">

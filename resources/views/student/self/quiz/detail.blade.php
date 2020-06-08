@@ -68,7 +68,7 @@
     <div class="col-md-3">
       <div class="card">
         <div class="card-body bg-primary text-white">
-          <h4 class="card-title">Result: </h4>
+          <h4 class="card-title">Correct: </h4>
           <p class="card-text h1 font-weight-bold"> <i class="fa fa-check-circle" aria-hidden="true"></i>
              {{$totalCorrect}} of {{$questions->count()}}
           </p>

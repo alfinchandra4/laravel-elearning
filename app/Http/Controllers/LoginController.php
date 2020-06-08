@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Alert;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -16,15 +17,14 @@ class LoginController extends Controller
 
         $credential = ['email' => $request->email, 'password' => $request->password];
 
-        if (auth()->guard('admin')->attempt($credential)) {
+        if (Auth::guard('admin')->attempt($credential)) {
             return redirect()->intended('/admin');
-        } elseif (auth()->guard('student')->attempt($credential)) {
+        } elseif (Auth::guard('student')->attempt($credential)) {
             return redirect()->intended('/student');
-        } elseif (auth()->guard('lecturer')->attempt($credential)) {
+        } elseif (Auth::guard('lecturer')->attempt($credential)) {
             return redirect()->intended('/lecturer');
         } else {
-            toast('Invalid credentials', 'error');
-            return back();
+            return back()->withError('Error! Invalid Credentials');
         }
     }
 

@@ -26,6 +26,8 @@ class Lecturer extends Authenticatable
         $this->attributes['password'] = bcrypt($value);
     }
 
+
+    // ELOQUENT RELATIONSHIP
     public function lessons()
     {
         return $this->hasMany(Lesson::class, 'lecturer_id', 'id');
@@ -36,15 +38,18 @@ class Lecturer extends Authenticatable
         return $this->hasMany(Studentsenrolled::class, 'lecturer_id', 'id');
     }
 
-    public function assignment() {
+    public function assignment()
+    {
         return $this->hasMany(Assignment::class, 'lecturer_id', 'id');
     }
 
-    public function quiz() {
+    public function quiz()
+    {
         return $this->hasMany(Quizzes::class, 'lecturer_id', 'id');
     }
 
-    public function chat_room() {
+    public function chat_room()
+    {
         return $this->hasMany(Chatroom::class, 'lecturer_id', 'id');
     }
 }

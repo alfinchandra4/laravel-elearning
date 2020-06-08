@@ -67,4 +67,9 @@ class ExampleController extends Controller
         session()->forget('lecturers');
         session()->forget('user_chats');
     }
+
+    public function logindebug() {
+        $user = Student::find(1);
+        dd($user);
+    }
 }

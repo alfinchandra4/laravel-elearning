@@ -66,6 +66,9 @@ Route::group(['prefix' => 'student', 'middleware' => ['auth:student']], function
   Route::get('/mychat/selected-chat/{lecturer_id}', 'StudentController@self_chat_selectedchat')->name('student.self.chat.selected.lecturer');
   Route::post('/sendmsg', 'StudentController@self_chat_sendmsg')->name('student.self.chat.sendmsg');
 
+  // Profile
+  Route::view('/profile', 'student.self.profile')->name('student.profile');
+  Route::post('/setpassword', 'StudentController@setpassword')->name('student.setpassword');
 });
 
 Route::group(['prefix' => 'lecturer', 'middleware' => ['auth:lecturer']], function () {
@@ -106,6 +109,8 @@ Route::group(['prefix' => 'lecturer', 'middleware' => ['auth:lecturer']], functi
 
   // Live chat (POV: Lecturer)
   Route::get('/chats', 'LecturerController@chats')->name('lecturer.chats');
+  Route::get('/chats/selected-chat/{student_id}', 'LecturerController@selected_chat')->name('lecturer.selected.chat');
+  Route::post('/chats/send-msg', 'LecturerController@sendmsg')->name('lecturer.chat.sendmsg');
 });
 
 Route::get('/session', 'ExampleController@session');
@@ -115,3 +120,4 @@ Route::get('/getstudent/{student_id}', 'ExampleController@getstudent');
 Route::get('/getlecturer/{lecturer_id}', 'ExampleController@getlecturer');
 Route::get('/guard', 'ExampleController@guard');
 Route::get('/answer', 'ExampleController@answer');
+Route::get('/logindebug', 'ExampleController@logindebug');

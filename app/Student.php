@@ -14,6 +14,8 @@ class Student extends Authenticatable
     protected $primaryKey = 'id';
     protected $guarded = [];
 
+    protected $guard = 'student';
+
     public function faculty()
     {
         return $this->belongsTo(Faculty::class, 'faculty_id');
@@ -39,11 +41,13 @@ class Student extends Authenticatable
         return $this->hasMany(Studentassignment::class, 'student_id', 'id');
     }
 
-    public function student_quiz() {
+    public function student_quiz()
+    {
         return $this->hasMany(Studentquiz::class, 'student_id', 'id');
     }
 
-    public function chat_room() {
+    public function chat_room()
+    {
         return $this->hasMany(Chatsroom::class, 'student_id', 'id');
     }
 }

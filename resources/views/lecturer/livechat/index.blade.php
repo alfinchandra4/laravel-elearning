@@ -32,6 +32,13 @@
         min-height: 467px;
         background-color: white;
       }
+      
+      .liststudent .list-group-item{
+          border-top-right-radius: 0px !important;
+          border-top-left-radius: 0px !important;
+          border-bottom-right-radius: 0px !important;
+          border-bottom-left-radius: 0px !important;
+      }
     </style>
 @endsection
 
@@ -41,52 +48,53 @@
       <div class="list-header bg-warning p-2 font-weight-bold">
         User list
       </div>
-      <ul class="list-group list-group-flush list-body">
-        @for ($i = 0; $i < 20; $i++)
-          <li class="list-group-item list-group-item-action">Cras justo odio</li>
-          <li class="list-group-item list-group-item-action">Dapibus ac facilisis in</li>
-          <li class="list-group-item list-group-item-action">Morbi leo risus</li>
-          <li class="list-group-item list-group-item-action">Porta ac consectetur ac</li>
-          <li class="list-group-item list-group-item-action">Vestibulum at eros</li>
-        @endfor
-      </ul>
+      <div class="list-group liststudent">
+        @php
+            $chatrooms = App\Chatsroom::where('lecturer_id', lecturer()->id)
+                                ->orderByDesc('created_at')->get();
+        @endphp
+        @foreach ($chatrooms as $chatroom)
+          <a href="{{ route('lecturer.selected.chat', $chatroom->student_id) }}" 
+             class="list-group-item list-group-item-action {{ $chatroom->student_id == session('studentid') ? 'active' : '' }}" tabindex="-1" aria-disabled="true">
+            {{ $chatroom->student->name }}
+            <div class="float-right">
+              <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            </div>
+          </a>
+        @endforeach
+      </div>
     </div>
     <div class="users-chat">
       <div class="list-header bg-warning p-2 font-weight-bold">
-        Student.name
+        {{ App\Student::find(session('studentid'))->name }}
       </div>
       <div class="chats">
-        <ul class="list-group list-group-flush chats-body">
-          @for ($i = 0; $i < 20; $i++)
-            <li class="list-group-item list-group-item-action">
-              <div class="username text-muted">
-                @if ($i % 2 == 0 )
-                    Diana [15015012005 Sistem informasi]
-                @else
-                    Dosen Sri Kartike
-                @endif
-              </div>
-              <div class="userchat">
-                @if ($i % 2 == 0 )
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corporis, labore.
-                @else
-                    Lorem ipsum dolor sit amet consectetur.
-                @endif
-              </div>
-              <div class="created-at text-muted" style="font-size: 10pt">
-              13:25 29/05/20
-              </div>
-            </li>
-          @endfor
-        </ul>
+        @if (session()->has('user_chats'))
+          <ul class="list-group list-group-flush chats-body">
+            @foreach (session('user_chats') as $chat)
+              <li class="list-group-item list-group-item-action">
+                <div class="username text-muted font-weight-bold"> {{ $chat->name }} </div>
+                <div class="userchat font-weight-lighter"> {{ $chat->message }} </div>
+                <div class="created-at text-muted font-weight-lighter" style="font-size: 8pt">
+                {{ date('H:i d/m/y', strtotime($chat->created_at)) }}
+                </div>
+              </li>
+            @endforeach            
+          </ul>
+        @endif
       </div>
       <div class="chat-input" style="border-radius:0px">
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2">
-          <div class="input-group-append">
-            <button class="btn btn-outline-primary" type="button">Send</button>
+        <form action="{{ route('lecturer.chat.sendmsg') }}" method="post">
+          @csrf
+          <input type="hidden" name="studentid" value="{{ session('studentid') }}">
+          <input type="hidden" name="chatroomid" value="{{ session('chatroomid') }}">
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Tulis pesan" name="message">
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary" type="submit">Send</button>
+            </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>

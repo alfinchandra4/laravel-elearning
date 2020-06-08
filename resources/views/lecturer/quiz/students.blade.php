@@ -42,7 +42,7 @@
     <h4 class="font-weight-bold">Jawaban</h4>
     <div class="alert alert-info" role="alert"> 
       @if (session()->has('student'))
-          <b>{{ session('student')['name']}}</b>, Result: {{ session('student')['score'] }} 
+          <b>{{ session('student')['name']}}</b>, Correct: {{ session('student')['score'] }} 
       @endif
     </div>
     @if (session()->has('student_choices'))

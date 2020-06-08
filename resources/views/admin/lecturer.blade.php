@@ -38,7 +38,7 @@
           </thead>
           <tbody id="tbody" class="font-weight-lighter">
             @php
-                $lecturers = App\Lecturer::all();
+                $lecturers = App\Lecturer::orderByDesc('updated_at')->get();
             @endphp
             @foreach ($lecturers as $lecturer)
                 <tr>

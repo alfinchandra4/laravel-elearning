@@ -81,7 +81,7 @@
           <a class="dropdown-item text-dark" href="{{ route('student.self.assignments') }}">Assignments</a>
           <a class="dropdown-item text-dark" href="{{ route('student.self.quizzes') }}">Kuis</a>
           <a class="dropdown-item text-dark" href="{{ route('student.self.chats') }}">Pesan</a>
-          <a class="dropdown-item text-dark" href="#">Profile</a>
+          <a class="dropdown-item text-dark" href="{{ route('student.profile') }}">Profile</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item text-dark" href="/logout">Logout</a>
         </div>

@@ -7,6 +7,8 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Storage;
 
 use App\Lecturer;
+use App\Chatsroom;
+use App\Userchat;
 use App\Lesson;
 use App\Lessonfiles;
 use App\Assignment;
@@ -194,9 +196,10 @@ class LecturerController extends Controller
         return view('lecturer.assignments.create');
     }
 
-    public function assignment_edit($assignment_id) {
+    public function assignment_edit($assignment_id)
+    {
         $assignment = Assignment::find($assignment_id);
-        if($assignment !== null ) {
+        if ($assignment !== null) {
             return view('lecturer.assignments.edit', [
                 'assignment' => $assignment
             ]);
@@ -206,7 +209,8 @@ class LecturerController extends Controller
         }
     }
 
-    public function assignment_update(Request $request) {
+    public function assignment_update(Request $request)
+    {
         Assignment::find($request->assignment_id)->update([
             'title' => $request->title,
             'deadline' => $request->deadline,
@@ -238,7 +242,8 @@ class LecturerController extends Controller
         ]);
     }
 
-    public function assignment_student_get($student_assignment_id) {
+    public function assignment_student_get($student_assignment_id)
+    {
         $student_asignment = Studentassignment::find($student_assignment_id);
         $assignment_id     = $student_asignment->assignment->id;
         $student_id = $student_asignment->student->id;
@@ -248,21 +253,21 @@ class LecturerController extends Controller
 
         $student_assignment_mode = $student_asignment->format;
         if ($student_assignment_mode == 'text') {
-            $student_assignment_mode_text = 
+            $student_assignment_mode_text =
                 Studentassignmenttext::where('assignment_id', $assignment_id)
-                                     ->where('student_id', $student_id)
-                                     ->where('student_assignment_id', $student_assignment_id)
-                                     ->first();
-                session()->forget('answer_files');
-                session()->put('answer_text', $student_assignment_mode_text->text);
+                ->where('student_id', $student_id)
+                ->where('student_assignment_id', $student_assignment_id)
+                ->first();
+            session()->forget('answer_files');
+            session()->put('answer_text', $student_assignment_mode_text->text);
         } elseif ($student_assignment_mode == 'files') {
-            $student_assignment_mode_files = 
+            $student_assignment_mode_files =
                 Studentassignmentfiles::where('assignment_id', $assignment_id)
-                                      ->where('student_id', $student_id)
-                                      ->where('student_assignment_id', $student_assignment_id)
-                                      ->get();
-                session()->forget('answer_text');
-                session()->put('answer_files', $student_assignment_mode_files);
+                ->where('student_id', $student_id)
+                ->where('student_assignment_id', $student_assignment_id)
+                ->get();
+            session()->forget('answer_text');
+            session()->put('answer_files', $student_assignment_mode_files);
         }
 
         return redirect()->route('lecturer.assignment.detail', $assignment_id);
@@ -303,8 +308,11 @@ class LecturerController extends Controller
         return back();
     }
 
-    public function quiz_delete($quiz_id) {
-        
+    public function quiz_delete($quiz_id)
+    {
+        Quizzes::find($quiz_id)->delete();
+        toast('Quiz deleted', 'success');
+        return back();
     }
 
     public function quiz_detail($quiz_id)
@@ -360,7 +368,8 @@ class LecturerController extends Controller
         return back();
     }
 
-    public function quiz_published(Request $request) {
+    public function quiz_published(Request $request)
+    {
         Quizzes::find($request->quiz_id)->increment('is_active');
         toast('Quiz activated', 'success');
         return back();
@@ -379,7 +388,8 @@ class LecturerController extends Controller
         ]);
     }
 
-    public function quiz_student_selected($quiz_id, $student_id) {
+    public function quiz_student_selected($quiz_id, $student_id)
+    {
         $student_choices = Studentchoices::where('quiz_id', $quiz_id)->where('student_id', $student_id)->get();
         $student = Student::find($student_id);
         $student_quiz = Studentquiz::where('quiz_id', $quiz_id)->where('student_id', $student_id)->first();
@@ -397,5 +407,36 @@ class LecturerController extends Controller
     public function chats()
     {
         return view('lecturer.livechat.index');
+    }
+
+    public function selected_chat($student_id)
+    {
+        $chatroom = Chatsroom::where('student_id', $student_id)
+            ->where('lecturer_id', lecturer()->id)->first();
+        if (!empty($chatroom)) {
+            $chatroomid = $chatroom->id;
+            $user_chats = Userchat::where('chatroom_id', $chatroomid)->get();
+            session()->put('user_chats', $user_chats);
+            session()->put('studentid', $student_id);
+            session()->put('chatroomid', $chatroom->id);
+            return back();
+        }
+        return back();
+    }
+
+    public function sendmsg(Request $request)
+    {
+        Userchat::create([
+            'level' => 'lecturer',
+            'userid' => lecturer()->id,
+            'name' => lecturer()->name,
+            'message' => $request->message,
+            'chatroom_id' => $request->chatroomid
+        ]);
+        // dd($request->studentid);
+        return redirect()->action(
+            'LecturerController@selected_chat',
+            ['student_id' => $request->studentid]
+        );
     }
 }

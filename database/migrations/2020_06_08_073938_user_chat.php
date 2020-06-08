@@ -19,7 +19,7 @@ class UserChat extends Migration
             $table->char('userid');
             $table->char('name');
             $table->char('message');
-            $table->foreignId('chatroom_id')->constrained('chats_room');
+            $table->foreignId('chatroom_id')->constrained('chats_room')->cascadeOnDelete();
             $table->timestamps();
         });
     }
